@@ -149,6 +149,42 @@
   - [x] Distance slider (1-50 km range)
   - [x] "Active" badge for location filter
 
+### Phase 6: Enhanced Property Media & Smart Rent Calculator ✅
+- [x] Multiple Property Images
+  - [x] Support for 5-8 images per property
+  - [x] Enhanced ImageGallery with thumbnail navigation
+  - [x] Full-screen image viewer
+  - [x] Image counter display
+  - [x] Updated sample properties with multiple images
+  
+- [x] Property Video Tours
+  - [x] Added video_url field to properties table
+  - [x] Video component with custom controls
+  - [x] Video player with poster image
+  - [x] Play/pause, volume, progress controls
+  - [x] Integrated into PropertyDetails page
+  - [x] Sample properties with video URLs
+  
+- [x] 360° Virtual Tour
+  - [x] Already supported via virtual_tour_url
+  - [x] Iframe integration for 360° views
+  - [x] Full-screen 360° viewer
+  - [x] Toggle between images and 360° view
+  
+- [x] Smart Rent Calculator
+  - [x] Duration-based calculations (daily, weekly, monthly, yearly)
+  - [x] Accommodation type-specific pricing
+  - [x] Food service charges (varies by type)
+  - [x] Parking charges
+  - [x] Maintenance charges (for flats)
+  - [x] Automatic discounts (5% weekly, 15% yearly)
+  - [x] Per-day rate calculation
+  - [x] Savings display
+  - [x] Toggle additional services
+  - [x] Real-time calculation updates
+  - [x] Best value indicators
+  - [x] Accommodation-specific notes
+
 ## Implementation Summary
 
 ### Database Enhancements ✅
@@ -287,6 +323,10 @@
 
 ## Features Summary
 ✅ **20 Sample Properties** across 10 major cities
+✅ **Multiple Property Images** (5-8 images per property)
+✅ **Property Video Tours** with custom video player
+✅ **360° Virtual Tours** with full-screen viewer
+✅ **Smart Rent Calculator** with duration-based pricing
 ✅ **Current Location Detection** with geolocation API
 ✅ **Location-Based Filtering** with accurate distance calculation (Haversine formula)
 ✅ **Distance Filter** (1-50 km radius with slider)
@@ -309,6 +349,8 @@
 ✅ **View Tracking** for analytics
 ✅ **Enhanced Property Details** with all amenities
 ✅ **Mutual Exclusivity** between city and location filters
+✅ **Accommodation-Specific Pricing** in rent calculator
+✅ **Automatic Discounts** for longer stays
 
 ## Notes
 - Demo data includes realistic properties with actual coordinates

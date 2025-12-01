@@ -33,6 +33,7 @@ export interface Property {
   owner_id: string | null;
   images: string[];
   virtual_tour_url: string | null;
+  video_url: string | null;
   amenities: string[];
   gender_preference: string;
   occupancy_type: string;

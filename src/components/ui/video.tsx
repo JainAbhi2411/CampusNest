@@ -11,13 +11,13 @@
  */
 
 import {
+    Player,
     BigPlayButton,
     ControlBar,
     PlayToggle,
     CurrentTimeDisplay,
     TimeDivider,
     DurationDisplay,
-    FullscreenToggle,
     VolumeMenuButton,
     ProgressControl
 } from 'video-react';
@@ -96,13 +96,12 @@ display: block;
         autoHide
         disableCompletely={!controls}
         >
-        <PlayToggle key="play-toggle" />
-        <VolumeMenuButton key="volume-menu-button" vertical />
-        <CurrentTimeDisplay key="current-time-display" />
-        <TimeDivider key="time-divider" />
-        <DurationDisplay key="duration-display" />
-        <ProgressControl key="progress-control" />
-        <FullscreenToggle key="fullscreen-toggle" />
+        <PlayToggle />
+        <VolumeMenuButton vertical />
+        <CurrentTimeDisplay />
+        <TimeDivider />
+        <DurationDisplay />
+        <ProgressControl />
         </ControlBar>
         <BigPlayButton position="center" />
     </Player>

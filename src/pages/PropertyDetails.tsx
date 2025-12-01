@@ -19,12 +19,15 @@ import {
   Wind,
   Car,
   UtensilsCrossed,
+  Video as VideoIcon,
 } from 'lucide-react';
 import ImageGallery from '@/components/property/ImageGallery';
 import BookingForm from '@/components/property/BookingForm';
 import FavoriteButton from '@/components/property/FavoriteButton';
 import ShareButton from '@/components/property/ShareButton';
 import ReviewSection from '@/components/property/ReviewSection';
+import RentCalculator from '@/components/property/RentCalculator';
+import Video from '@/components/ui/video';
 import { propertyApi, propertyViewApi } from '@/db/api';
 import { useAuth } from 'miaoda-auth-react';
 import type { PropertyWithDetails } from '@/types/types';
@@ -188,6 +191,26 @@ const PropertyDetails: React.FC = () => {
                 </CardContent>
               </Card>
 
+              {property.video_url && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <VideoIcon className="h-5 w-5" />
+                      Property Video Tour
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="rounded-lg overflow-hidden">
+                      <Video
+                        src={property.video_url}
+                        poster={property.images?.[0] || ''}
+                        className="w-full"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               <Card>
                 <CardHeader>
                   <CardTitle>Property Details</CardTitle>
@@ -303,11 +326,12 @@ const PropertyDetails: React.FC = () => {
             </div>
 
             <div className="xl:col-span-1">
-              <div className="sticky top-20">
+              <div className="sticky top-20 space-y-6">
                 <BookingForm
                   propertyId={property.id}
                   onSuccess={() => loadProperty(property.id)}
                 />
+                <RentCalculator property={property} />
               </div>
             </div>
           </div>
