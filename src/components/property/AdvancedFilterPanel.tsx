@@ -44,6 +44,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
       (position) => {
         onFilterChange({
           ...filters,
+          city: undefined, // Clear city when using location
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           max_distance: filters.max_distance || 10,
@@ -93,7 +94,17 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
           <Label htmlFor="city">City</Label>
           <Select
             value={filters.city || 'all'}
-            onValueChange={(value) => onFilterChange({ ...filters, city: value === 'all' ? undefined : value })}
+            onValueChange={(value) => {
+              const newFilters = { ...filters, city: value === 'all' ? undefined : value };
+              // If selecting a city, clear location-based search
+              if (value !== 'all') {
+                newFilters.latitude = undefined;
+                newFilters.longitude = undefined;
+                newFilters.max_distance = undefined;
+              }
+              onFilterChange(newFilters);
+            }}
+            disabled={!!(filters.latitude && filters.longitude)}
           >
             <SelectTrigger id="city">
               <SelectValue placeholder="Select City" />
@@ -105,6 +116,11 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
               ))}
             </SelectContent>
           </Select>
+          {filters.latitude && filters.longitude && (
+            <p className="text-xs text-muted-foreground">
+              Clear location filter to select a city
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">

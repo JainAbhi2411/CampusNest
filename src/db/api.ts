@@ -69,6 +69,11 @@ export const profileApi = {
 // Property API
 export const propertyApi = {
   async getProperties(filters?: SearchFilters, page = 1, pageSize = 12): Promise<Property[]> {
+    // If location-based search is requested, use RPC for distance calculation
+    if (filters?.latitude !== undefined && filters?.longitude !== undefined && filters?.max_distance) {
+      return this.getPropertiesByLocation(filters, page, pageSize);
+    }
+
     let query = supabase.from('properties').select('*');
 
     // Basic filters
@@ -139,6 +144,116 @@ export const propertyApi = {
 
     if (error) throw error;
     return Array.isArray(data) ? data : [];
+  },
+
+  async getPropertiesByLocation(filters: SearchFilters, page = 1, pageSize = 12): Promise<Property[]> {
+    // Get all properties first
+    let query = supabase.from('properties').select('*');
+
+    // Apply non-location filters
+    if (filters?.accommodation_type) {
+      query = query.eq('accommodation_type', filters.accommodation_type);
+    }
+    if (filters?.min_price !== undefined) {
+      query = query.gte('price', filters.min_price);
+    }
+    if (filters?.max_price !== undefined) {
+      query = query.lte('price', filters.max_price);
+    }
+    if (filters?.available !== undefined) {
+      query = query.eq('available', filters.available);
+    }
+    if (filters?.gender_preference) {
+      query = query.eq('gender_preference', filters.gender_preference);
+    }
+    if (filters?.occupancy_type) {
+      query = query.eq('occupancy_type', filters.occupancy_type);
+    }
+    if (filters?.food_included !== undefined) {
+      query = query.eq('food_included', filters.food_included);
+    }
+    if (filters?.wifi_available !== undefined) {
+      query = query.eq('wifi_available', filters.wifi_available);
+    }
+    if (filters?.ac_available !== undefined) {
+      query = query.eq('ac_available', filters.ac_available);
+    }
+    if (filters?.parking_available !== undefined) {
+      query = query.eq('parking_available', filters.parking_available);
+    }
+    if (filters?.min_rating !== undefined) {
+      query = query.gte('average_rating', filters.min_rating);
+    }
+
+    // Only get properties that have coordinates
+    query = query.not('latitude', 'is', null).not('longitude', 'is', null);
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    if (!data) return [];
+
+    // Calculate distance for each property
+    const propertiesWithDistance = data.map((property: any) => {
+      const distance = this.calculateDistance(
+        filters.latitude!,
+        filters.longitude!,
+        property.latitude,
+        property.longitude
+      );
+      return { ...property, distance };
+    });
+
+    // Filter by max distance
+    const filteredProperties = propertiesWithDistance.filter(
+      (p) => p.distance <= (filters.max_distance || 10)
+    );
+
+    // Sort by distance or other criteria
+    let sortedProperties = filteredProperties;
+    if (filters?.sort_by) {
+      switch (filters.sort_by) {
+        case 'price_low':
+          sortedProperties.sort((a, b) => a.price - b.price);
+          break;
+        case 'price_high':
+          sortedProperties.sort((a, b) => b.price - a.price);
+          break;
+        case 'rating':
+          sortedProperties.sort((a, b) => b.average_rating - a.average_rating);
+          break;
+        case 'newest':
+          sortedProperties.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+          break;
+        default:
+          sortedProperties.sort((a, b) => a.distance - b.distance);
+      }
+    } else {
+      // Default: sort by distance
+      sortedProperties.sort((a, b) => a.distance - b.distance);
+    }
+
+    // Apply pagination
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize;
+
+    return sortedProperties.slice(from, to);
+  },
+
+  // Haversine formula to calculate distance between two coordinates
+  calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    const toRad = (value: number) => (value * Math.PI) / 180;
+    const R = 6371; // Earth's radius in km
+
+    const dLat = toRad(lat2 - lat1);
+    const dLng = toRad(lng2 - lng1);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
   },
 
   async getPropertiesByType(type: string, limit = 6): Promise<Property[]> {

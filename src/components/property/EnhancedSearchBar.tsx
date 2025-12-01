@@ -129,6 +129,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
       if (params.useLocation && params.latitude && params.longitude) {
         searchParams.set('lat', params.latitude.toString());
         searchParams.set('lng', params.longitude.toString());
+        searchParams.set('distance', '10'); // Default 10km
       }
 
       navigate(`/properties?${searchParams.toString()}`);

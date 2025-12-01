@@ -27,6 +27,7 @@ const Properties: React.FC = () => {
     const maxPrice = searchParams.get('max_price');
     const lat = searchParams.get('lat');
     const lng = searchParams.get('lng');
+    const distance = searchParams.get('distance');
 
     const urlFilters: SearchFilters = {};
     if (city) urlFilters.city = city;
@@ -36,19 +37,19 @@ const Properties: React.FC = () => {
     if (lat && lng) {
       urlFilters.latitude = Number(lat);
       urlFilters.longitude = Number(lng);
-      urlFilters.max_distance = 10;
+      urlFilters.max_distance = distance ? Number(distance) : 10;
     }
 
-    if (Object.keys(urlFilters).length > 0) {
-      setFilters(urlFilters);
-    }
+    setFilters(urlFilters);
 
     if (searchQuery) {
       handleSearch(searchQuery);
-    } else {
-      loadProperties();
     }
-  }, [currentPage, searchParams]);
+  }, [searchParams]);
+
+  useEffect(() => {
+    loadProperties();
+  }, [filters, currentPage]);
 
   const loadProperties = async () => {
     setIsLoading(true);
