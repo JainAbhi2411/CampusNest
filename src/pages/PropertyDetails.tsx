@@ -329,6 +329,7 @@ const PropertyDetails: React.FC = () => {
               <div className="sticky top-20 space-y-6">
                 <BookingForm
                   propertyId={property.id}
+                  property={property}
                   onSuccess={() => loadProperty(property.id)}
                 />
                 <RentCalculator property={property} />

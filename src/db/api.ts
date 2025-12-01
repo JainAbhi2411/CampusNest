@@ -434,6 +434,13 @@ export const bookingApi = {
     booking_date: string;
     booking_time?: string;
     notes?: string;
+    number_of_people?: number;
+    preferred_time_slot?: string;
+    move_in_date?: string;
+    booking_duration?: string;
+    advance_payment?: number;
+    payment_status?: string;
+    special_requests?: string;
   }): Promise<Booking> {
     const { data, error } = await supabase
       .from('bookings')

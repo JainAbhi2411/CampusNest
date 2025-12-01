@@ -74,6 +74,13 @@ export interface Booking {
   booking_time: string | null;
   status: BookingStatus;
   notes: string | null;
+  number_of_people: number | null;
+  preferred_time_slot: string | null;
+  move_in_date: string | null;
+  booking_duration: string | null;
+  advance_payment: number | null;
+  payment_status: string | null;
+  special_requests: string | null;
   created_at: string;
   updated_at: string;
 }

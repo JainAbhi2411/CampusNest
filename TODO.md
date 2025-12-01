@@ -163,7 +163,7 @@
   - [x] Video player with poster image
   - [x] Play/pause, volume, progress controls
   - [x] Integrated into PropertyDetails page
-  - [x] Sample properties with video URLs
+  - [x] Sample properties with working video URLs
   
 - [x] 360° Virtual Tour
   - [x] Already supported via virtual_tour_url
@@ -184,6 +184,48 @@
   - [x] Real-time calculation updates
   - [x] Best value indicators
   - [x] Accommodation-specific notes
+
+### Phase 7: Enhanced Booking System ✅
+- [x] Database Schema Enhancement
+  - [x] Added number_of_people field
+  - [x] Added preferred_time_slot field
+  - [x] Added move_in_date field
+  - [x] Added booking_duration field
+  - [x] Added advance_payment field
+  - [x] Added payment_status field
+  - [x] Added special_requests field
+  - [x] Created indexes for better performance
+  
+- [x] Schedule Visit Enhancement
+  - [x] Tab-based interface (Visit / Book Now)
+  - [x] Visit date picker
+  - [x] Preferred time slot selector (Morning/Afternoon/Evening)
+  - [x] Specific time input (optional)
+  - [x] Number of people selector (1-4)
+  - [x] Additional notes textarea
+  - [x] Enhanced success messages
+  - [x] Form validation with Zod
+  
+- [x] Book Now Feature
+  - [x] Move-in date picker
+  - [x] Booking duration selector (1M, 3M, 6M, 1Y)
+  - [x] Number of occupants selector
+  - [x] Advance payment input (10% minimum)
+  - [x] Special requests textarea
+  - [x] Terms and conditions checkbox
+  - [x] Payment status tracking
+  - [x] Booking confirmation flow
+  - [x] Visual trust indicators
+  
+- [x] User Experience Improvements
+  - [x] Separate forms for different booking types
+  - [x] Clear visual separation with tabs
+  - [x] Contextual help text
+  - [x] Minimum advance payment calculation
+  - [x] Trust badges (instant confirmation, secure payment, 24/7 support)
+  - [x] Better error messages
+  - [x] Loading states
+  - [x] Form reset after submission
 
 ## Implementation Summary
 
@@ -327,6 +369,12 @@
 ✅ **Property Video Tours** with custom video player
 ✅ **360° Virtual Tours** with full-screen viewer
 ✅ **Smart Rent Calculator** with duration-based pricing
+✅ **Enhanced Booking System** with Schedule Visit & Book Now
+✅ **Tab-Based Booking Interface** for better UX
+✅ **Preferred Time Slots** for visit scheduling
+✅ **Move-in Date Selection** for direct bookings
+✅ **Advance Payment Tracking** with 10% minimum
+✅ **Terms & Conditions** acceptance flow
 ✅ **Current Location Detection** with geolocation API
 ✅ **Location-Based Filtering** with accurate distance calculation (Haversine formula)
 ✅ **Distance Filter** (1-50 km radius with slider)
@@ -351,6 +399,8 @@
 ✅ **Mutual Exclusivity** between city and location filters
 ✅ **Accommodation-Specific Pricing** in rent calculator
 ✅ **Automatic Discounts** for longer stays
+✅ **Payment Status Tracking** for bookings
+✅ **Special Requests** field for custom requirements
 
 ## Notes
 - Demo data includes realistic properties with actual coordinates
