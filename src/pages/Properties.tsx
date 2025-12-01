@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import PropertyCard from '@/components/property/PropertyCard';
-import FilterPanel from '@/components/property/FilterPanel';
-import SearchBar from '@/components/property/SearchBar';
+import AdvancedFilterPanel from '@/components/property/AdvancedFilterPanel';
+import EnhancedSearchBar from '@/components/property/EnhancedSearchBar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,12 +21,34 @@ const Properties: React.FC = () => {
 
   useEffect(() => {
     const searchQuery = searchParams.get('search');
+    const city = searchParams.get('city');
+    const type = searchParams.get('type');
+    const minPrice = searchParams.get('min_price');
+    const maxPrice = searchParams.get('max_price');
+    const lat = searchParams.get('lat');
+    const lng = searchParams.get('lng');
+
+    const urlFilters: SearchFilters = {};
+    if (city) urlFilters.city = city;
+    if (type) urlFilters.accommodation_type = type as any;
+    if (minPrice) urlFilters.min_price = Number(minPrice);
+    if (maxPrice) urlFilters.max_price = Number(maxPrice);
+    if (lat && lng) {
+      urlFilters.latitude = Number(lat);
+      urlFilters.longitude = Number(lng);
+      urlFilters.max_distance = 10;
+    }
+
+    if (Object.keys(urlFilters).length > 0) {
+      setFilters(urlFilters);
+    }
+
     if (searchQuery) {
       handleSearch(searchQuery);
     } else {
       loadProperties();
     }
-  }, [filters, currentPage, searchParams]);
+  }, [currentPage, searchParams]);
 
   const loadProperties = async () => {
     setIsLoading(true);
@@ -86,7 +108,7 @@ const Properties: React.FC = () => {
         <div className="bg-primary text-primary-foreground py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 className="text-3xl xl:text-4xl font-bold mb-6">Browse Properties</h1>
-            <SearchBar onSearch={handleSearch} />
+            <EnhancedSearchBar showQuickFilters={false} />
           </div>
         </div>
 
@@ -94,7 +116,7 @@ const Properties: React.FC = () => {
           <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
             <div className="xl:col-span-1">
               <div className="sticky top-20">
-                <FilterPanel
+                <AdvancedFilterPanel
                   filters={filters}
                   onFilterChange={handleFilterChange}
                   onReset={handleResetFilters}

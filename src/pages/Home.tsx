@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Building2, Search, Calendar, Shield, ArrowRight } from 'lucide-react';
-import SearchBar from '@/components/property/SearchBar';
+import EnhancedSearchBar from '@/components/property/EnhancedSearchBar';
 import PropertyCard from '@/components/property/PropertyCard';
 import { propertyApi } from '@/db/api';
 import type { Property } from '@/types/types';
@@ -69,8 +69,8 @@ const Home: React.FC = () => {
               <p className="text-lg xl:text-xl mb-8 text-primary-foreground/90">
                 Search from thousands of verified PGs, flats, hostels, and rooms near your campus
               </p>
-              <div className="max-w-2xl mx-auto">
-                <SearchBar />
+              <div className="max-w-4xl mx-auto">
+                <EnhancedSearchBar showQuickFilters={true} />
               </div>
             </div>
           </div>
