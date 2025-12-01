@@ -2,6 +2,7 @@ import Home from './pages/Home';
 import Properties from './pages/Properties';
 import PropertyDetails from './pages/PropertyDetails';
 import MessFacilities from './pages/MessFacilities';
+import MessDetails from './pages/MessDetails';
 import Dashboard from './pages/Dashboard';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
@@ -37,6 +38,12 @@ const routes: RouteConfig[] = [
     name: 'Mess Facilities',
     path: '/mess',
     element: <MessFacilities />,
+    visible: false,
+  },
+  {
+    name: 'Mess Details',
+    path: '/mess/:id',
+    element: <MessDetails />,
     visible: false,
   },
   {

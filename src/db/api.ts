@@ -3,6 +3,9 @@ import type {
   Profile,
   Property,
   MessFacility,
+  MessBooking,
+  MessReview,
+  MessReviewWithUser,
   Booking,
   PropertyWithDetails,
   BookingWithDetails,
@@ -382,6 +385,159 @@ export const messFacilityApi = {
   async deleteMessFacility(id: string): Promise<void> {
     const { error } = await supabase.from('mess_facilities').delete().eq('id', id);
     if (error) throw error;
+  },
+};
+
+// Mess Booking API
+export const messBookingApi = {
+  async createMessBooking(booking: {
+    mess_id: string;
+    user_id: string;
+    booking_type: 'trial' | 'daily' | 'weekly' | 'monthly';
+    meal_types: string[];
+    start_date: string;
+    end_date?: string;
+    dietary_preference?: string;
+    special_requirements?: string;
+    total_amount?: number;
+    advance_payment?: number;
+    payment_status?: string;
+    notes?: string;
+  }): Promise<MessBooking> {
+    const { data, error } = await supabase
+      .from('mess_bookings')
+      .insert(booking)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Failed to create mess booking');
+    return data;
+  },
+
+  async getUserMessBookings(userId: string, page = 1, pageSize = 10): Promise<MessBooking[]> {
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    const { data, error } = await supabase
+      .from('mess_bookings')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .range(from, to);
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  },
+
+  async getMessBookingById(id: string): Promise<MessBooking | null> {
+    const { data, error } = await supabase
+      .from('mess_bookings')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async updateMessBookingStatus(id: string, status: string): Promise<MessBooking> {
+    const { data, error } = await supabase
+      .from('mess_bookings')
+      .update({ status })
+      .eq('id', id)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Mess booking not found');
+    return data;
+  },
+
+  async cancelMessBooking(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('mess_bookings')
+      .update({ status: 'cancelled' })
+      .eq('id', id);
+
+    if (error) throw error;
+  },
+};
+
+// Mess Review API
+export const messReviewApi = {
+  async getMessReviews(messId: string, page = 1, pageSize = 10): Promise<MessReviewWithUser[]> {
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    const { data, error } = await supabase
+      .from('mess_reviews')
+      .select(`
+        *,
+        user:profiles(id, username, full_name, avatar_url)
+      `)
+      .eq('mess_id', messId)
+      .order('created_at', { ascending: false })
+      .range(from, to);
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  },
+
+  async createMessReview(review: {
+    mess_id: string;
+    user_id: string;
+    rating: number;
+    food_quality_rating?: number;
+    hygiene_rating?: number;
+    service_rating?: number;
+    comment?: string;
+  }): Promise<MessReview> {
+    const { data, error } = await supabase
+      .from('mess_reviews')
+      .insert(review)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Failed to create review');
+    return data;
+  },
+
+  async updateMessReview(id: string, updates: {
+    rating?: number;
+    food_quality_rating?: number;
+    hygiene_rating?: number;
+    service_rating?: number;
+    comment?: string;
+  }): Promise<MessReview> {
+    const { data, error } = await supabase
+      .from('mess_reviews')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Review not found');
+    return data;
+  },
+
+  async deleteMessReview(id: string): Promise<void> {
+    const { error } = await supabase.from('mess_reviews').delete().eq('id', id);
+    if (error) throw error;
+  },
+
+  async getUserMessReview(messId: string, userId: string): Promise<MessReview | null> {
+    const { data, error } = await supabase
+      .from('mess_reviews')
+      .select('*')
+      .eq('mess_id', messId)
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
   },
 };
 

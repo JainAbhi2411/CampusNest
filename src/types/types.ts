@@ -59,10 +59,64 @@ export interface MessFacility {
   meal_types: string[];
   price_per_meal: number | null;
   monthly_price: number | null;
+  breakfast_price: number | null;
+  lunch_price: number | null;
+  dinner_price: number | null;
+  weekly_price: number | null;
+  trial_meal_price: number | null;
+  dietary_options: string[];
+  cuisine_types: string[];
+  breakfast_timing: string | null;
+  lunch_timing: string | null;
+  dinner_timing: string | null;
+  operating_days: string[];
+  capacity: number | null;
+  features: string[];
+  average_rating: number;
+  total_reviews: number;
+  hygiene_rating: number | null;
+  owner_id: string | null;
+  available: boolean;
+  special_notes: string | null;
   contact_phone: string | null;
   images: string[];
   created_at: string;
   updated_at: string;
+}
+
+export interface MessBooking {
+  id: string;
+  mess_id: string;
+  user_id: string;
+  booking_type: 'trial' | 'daily' | 'weekly' | 'monthly';
+  meal_types: string[];
+  start_date: string;
+  end_date: string | null;
+  dietary_preference: string | null;
+  special_requirements: string | null;
+  total_amount: number | null;
+  advance_payment: number | null;
+  payment_status: string;
+  status: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MessReview {
+  id: string;
+  mess_id: string;
+  user_id: string;
+  rating: number;
+  food_quality_rating: number | null;
+  hygiene_rating: number | null;
+  service_rating: number | null;
+  comment: string | null;
+  created_at: string;
+}
+
+export interface MessReviewWithUser extends MessReview {
+  user?: Profile;
 }
 
 export interface Booking {
