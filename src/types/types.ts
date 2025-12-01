@@ -2,6 +2,9 @@ export type UserRole = 'user' | 'admin';
 export type AccommodationType = 'pg' | 'flat' | 'hostel' | 'room';
 export type BookingType = 'visit' | 'room';
 export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type GenderPreference = 'male' | 'female' | 'any';
+export type OccupancyType = 'single' | 'double' | 'triple' | 'multiple';
+export type SortOption = 'price_low' | 'price_high' | 'rating' | 'newest';
 
 export interface Profile {
   id: string;
@@ -31,6 +34,14 @@ export interface Property {
   images: string[];
   virtual_tour_url: string | null;
   amenities: string[];
+  gender_preference: string;
+  occupancy_type: string;
+  food_included: boolean;
+  wifi_available: boolean;
+  ac_available: boolean;
+  parking_available: boolean;
+  average_rating: number;
+  total_reviews: number;
   created_at: string;
   updated_at: string;
 }
@@ -66,8 +77,36 @@ export interface Booking {
   updated_at: string;
 }
 
+export interface Review {
+  id: string;
+  property_id: string;
+  user_id: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+}
+
+export interface ReviewWithUser extends Review {
+  user?: Profile;
+}
+
+export interface Favorite {
+  id: string;
+  user_id: string;
+  property_id: string;
+  created_at: string;
+}
+
+export interface PropertyView {
+  id: string;
+  property_id: string;
+  user_id: string | null;
+  viewed_at: string;
+}
+
 export interface PropertyWithDetails extends Property {
   owner?: Profile;
+  is_favorite?: boolean;
 }
 
 export interface BookingWithDetails extends Booking {
@@ -82,4 +121,22 @@ export interface SearchFilters {
   max_price?: number;
   amenities?: string[];
   available?: boolean;
+  gender_preference?: GenderPreference;
+  occupancy_type?: OccupancyType;
+  food_included?: boolean;
+  wifi_available?: boolean;
+  ac_available?: boolean;
+  parking_available?: boolean;
+  min_rating?: number;
+  latitude?: number;
+  longitude?: number;
+  max_distance?: number;
+  sort_by?: SortOption;
+}
+
+export interface LocationData {
+  latitude: number;
+  longitude: number;
+  city?: string;
+  address?: string;
 }

@@ -10,6 +10,10 @@ import type {
   AccommodationType,
   BookingType,
   BookingStatus,
+  Review,
+  ReviewWithUser,
+  Favorite,
+  PropertyView,
 } from '@/types/types';
 
 // Profile API
@@ -323,5 +327,156 @@ export const storageApi = {
       .getPublicUrl(path);
 
     return data.publicUrl;
+  },
+};
+
+// Review API
+export const reviewApi = {
+  async getPropertyReviews(propertyId: string): Promise<ReviewWithUser[]> {
+    const { data, error } = await supabase
+      .from('reviews')
+      .select(`
+        *,
+        user:profiles(*)
+      `)
+      .eq('property_id', propertyId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  },
+
+  async createReview(review: Omit<Review, 'id' | 'created_at'>): Promise<Review> {
+    const { data, error } = await supabase
+      .from('reviews')
+      .insert(review)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Failed to create review');
+    return data;
+  },
+
+  async updateReview(reviewId: string, updates: Partial<Review>): Promise<Review> {
+    const { data, error } = await supabase
+      .from('reviews')
+      .update(updates)
+      .eq('id', reviewId)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Review not found');
+    return data;
+  },
+
+  async deleteReview(reviewId: string): Promise<void> {
+    const { error } = await supabase
+      .from('reviews')
+      .delete()
+      .eq('id', reviewId);
+
+    if (error) throw error;
+  },
+
+  async getUserReview(propertyId: string, userId: string): Promise<Review | null> {
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('*')
+      .eq('property_id', propertyId)
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  },
+};
+
+// Favorite API
+export const favoriteApi = {
+  async getUserFavorites(userId: string): Promise<PropertyWithDetails[]> {
+    const { data, error } = await supabase
+      .from('favorites')
+      .select(`
+        property:properties(
+          *,
+          owner:profiles(*)
+        )
+      `)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    if (!Array.isArray(data)) return [];
+    
+    return data
+      .map((item: any) => item.property)
+      .filter((property: any) => property !== null) as PropertyWithDetails[];
+  },
+
+  async addFavorite(userId: string, propertyId: string): Promise<Favorite> {
+    const { data, error } = await supabase
+      .from('favorites')
+      .insert({ user_id: userId, property_id: propertyId })
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Failed to add favorite');
+    return data;
+  },
+
+  async removeFavorite(userId: string, propertyId: string): Promise<void> {
+    const { error } = await supabase
+      .from('favorites')
+      .delete()
+      .eq('user_id', userId)
+      .eq('property_id', propertyId);
+
+    if (error) throw error;
+  },
+
+  async isFavorite(userId: string, propertyId: string): Promise<boolean> {
+    const { data, error } = await supabase
+      .from('favorites')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('property_id', propertyId)
+      .maybeSingle();
+
+    if (error) return false;
+    return !!data;
+  },
+
+  async getFavoriteIds(userId: string): Promise<string[]> {
+    const { data, error } = await supabase
+      .from('favorites')
+      .select('property_id')
+      .eq('user_id', userId);
+
+    if (error) return [];
+    return Array.isArray(data) ? data.map(item => item.property_id) : [];
+  },
+};
+
+// Property View API
+export const propertyViewApi = {
+  async recordView(propertyId: string, userId: string | null): Promise<void> {
+    const { error } = await supabase
+      .from('property_views')
+      .insert({ property_id: propertyId, user_id: userId });
+
+    if (error) console.error('Failed to record view:', error);
+  },
+
+  async getPropertyViewCount(propertyId: string): Promise<number> {
+    const { count, error } = await supabase
+      .from('property_views')
+      .select('*', { count: 'exact', head: true })
+      .eq('property_id', propertyId);
+
+    if (error) return 0;
+    return count || 0;
   },
 };
