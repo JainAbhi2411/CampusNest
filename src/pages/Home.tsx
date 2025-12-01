@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Building2, Search, Calendar, Shield, ArrowRight } from 'lucide-react';
 import EnhancedSearchBar from '@/components/property/EnhancedSearchBar';
 import PropertyCard from '@/components/property/PropertyCard';
+import CategorySection from '@/components/property/CategorySection';
 import { propertyApi } from '@/db/api';
 import type { Property } from '@/types/types';
 import PageMeta from '@/components/common/PageMeta';
@@ -148,6 +149,8 @@ const Home: React.FC = () => {
             )}
           </div>
         </section>
+
+        <CategorySection />
 
         <section className="py-16 xl:py-24 bg-primary text-primary-foreground">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

@@ -12,21 +12,35 @@ import {
   ArrowLeft,
   Phone,
   Mail,
+  Eye,
+  Star,
+  Users,
+  Wifi,
+  Wind,
+  Car,
+  UtensilsCrossed,
 } from 'lucide-react';
 import ImageGallery from '@/components/property/ImageGallery';
 import BookingForm from '@/components/property/BookingForm';
-import { propertyApi } from '@/db/api';
+import FavoriteButton from '@/components/property/FavoriteButton';
+import ShareButton from '@/components/property/ShareButton';
+import ReviewSection from '@/components/property/ReviewSection';
+import { propertyApi, propertyViewApi } from '@/db/api';
+import { useAuth } from 'miaoda-auth-react';
 import type { PropertyWithDetails } from '@/types/types';
 import PageMeta from '@/components/common/PageMeta';
 
 const PropertyDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const [property, setProperty] = useState<PropertyWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewCount, setViewCount] = useState(0);
 
   useEffect(() => {
     if (id) {
       loadProperty(id);
+      trackView(id);
     }
   }, [id]);
 
@@ -35,10 +49,20 @@ const PropertyDetails: React.FC = () => {
     try {
       const data = await propertyApi.getPropertyById(propertyId);
       setProperty(data);
+      const count = await propertyViewApi.getPropertyViewCount(propertyId);
+      setViewCount(count);
     } catch (error) {
       console.error('Failed to load property:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const trackView = async (propertyId: string) => {
+    try {
+      await propertyViewApi.recordView(propertyId, user?.id);
+    } catch (error) {
+      console.error('Failed to track view:', error);
     }
   };
 
@@ -106,14 +130,29 @@ const PropertyDetails: React.FC = () => {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
-                    <div>
+                    <div className="flex-1">
                       <h1 className="text-3xl font-bold mb-2">{property.title}</h1>
                       <div className="flex items-center text-muted-foreground mb-2">
                         <MapPin className="h-4 w-4 mr-1" />
                         <span>{property.address}, {property.location}, {property.city}</span>
                       </div>
+                      <div className="flex items-center gap-4 mt-2">
+                        {property.average_rating > 0 && (
+                          <div className="flex items-center gap-1">
+                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                            <span className="font-medium">{property.average_rating.toFixed(1)}</span>
+                            <span className="text-muted-foreground text-sm">
+                              ({property.total_reviews} reviews)
+                            </span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-1 text-muted-foreground text-sm">
+                          <Eye className="h-4 w-4" />
+                          <span>{viewCount} views</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       <Badge variant={property.available ? 'default' : 'secondary'} className="bg-secondary">
                         {property.available ? 'Available' : 'Occupied'}
                       </Badge>
@@ -123,12 +162,22 @@ const PropertyDetails: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 mb-6">
-                    <IndianRupee className="h-6 w-6 text-secondary" />
-                    <span className="text-3xl font-bold text-primary">
-                      {property.price.toLocaleString()}
-                    </span>
-                    <span className="text-muted-foreground">/ {property.price_period}</span>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2">
+                      <IndianRupee className="h-6 w-6 text-secondary" />
+                      <span className="text-3xl font-bold text-primary">
+                        {property.price.toLocaleString()}
+                      </span>
+                      <span className="text-muted-foreground">/ {property.price_period}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <FavoriteButton propertyId={property.id} variant="icon" />
+                      <ShareButton
+                        propertyId={property.id}
+                        propertyTitle={property.title}
+                        variant="icon"
+                      />
+                    </div>
                   </div>
 
                   <ImageGallery
@@ -136,6 +185,70 @@ const PropertyDetails: React.FC = () => {
                     virtualTourUrl={property.virtual_tour_url}
                     title={property.title}
                   />
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Property Details</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+                    {property.gender_preference && (
+                      <div className="flex items-center gap-2">
+                        <Users className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm text-muted-foreground">Gender</p>
+                          <p className="font-medium capitalize">{property.gender_preference}</p>
+                        </div>
+                      </div>
+                    )}
+                    {property.occupancy_type && (
+                      <div className="flex items-center gap-2">
+                        <Home className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm text-muted-foreground">Occupancy</p>
+                          <p className="font-medium capitalize">{property.occupancy_type}</p>
+                        </div>
+                      </div>
+                    )}
+                    {property.food_included !== undefined && (
+                      <div className="flex items-center gap-2">
+                        <UtensilsCrossed className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm text-muted-foreground">Food</p>
+                          <p className="font-medium">{property.food_included ? 'Included' : 'Not Included'}</p>
+                        </div>
+                      </div>
+                    )}
+                    {property.wifi_available !== undefined && property.wifi_available && (
+                      <div className="flex items-center gap-2">
+                        <Wifi className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm text-muted-foreground">WiFi</p>
+                          <p className="font-medium">Available</p>
+                        </div>
+                      </div>
+                    )}
+                    {property.ac_available !== undefined && property.ac_available && (
+                      <div className="flex items-center gap-2">
+                        <Wind className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm text-muted-foreground">AC</p>
+                          <p className="font-medium">Available</p>
+                        </div>
+                      </div>
+                    )}
+                    {property.parking_available !== undefined && property.parking_available && (
+                      <div className="flex items-center gap-2">
+                        <Car className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm text-muted-foreground">Parking</p>
+                          <p className="font-medium">Available</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
 
@@ -197,6 +310,10 @@ const PropertyDetails: React.FC = () => {
                 />
               </div>
             </div>
+          </div>
+
+          <div className="mt-8">
+            <ReviewSection propertyId={property.id} />
           </div>
         </div>
       </div>

@@ -71,8 +71,9 @@ export const propertyApi = {
   async getProperties(filters?: SearchFilters, page = 1, pageSize = 12): Promise<Property[]> {
     let query = supabase.from('properties').select('*');
 
+    // Basic filters
     if (filters?.city) {
-      query = query.ilike('city', `%${filters.city}%`);
+      query = query.eq('city', filters.city);
     }
     if (filters?.accommodation_type) {
       query = query.eq('accommodation_type', filters.accommodation_type);
@@ -87,12 +88,67 @@ export const propertyApi = {
       query = query.eq('available', filters.available);
     }
 
+    // New filters
+    if (filters?.gender_preference) {
+      query = query.eq('gender_preference', filters.gender_preference);
+    }
+    if (filters?.occupancy_type) {
+      query = query.eq('occupancy_type', filters.occupancy_type);
+    }
+    if (filters?.food_included !== undefined) {
+      query = query.eq('food_included', filters.food_included);
+    }
+    if (filters?.wifi_available !== undefined) {
+      query = query.eq('wifi_available', filters.wifi_available);
+    }
+    if (filters?.ac_available !== undefined) {
+      query = query.eq('ac_available', filters.ac_available);
+    }
+    if (filters?.parking_available !== undefined) {
+      query = query.eq('parking_available', filters.parking_available);
+    }
+    if (filters?.min_rating !== undefined) {
+      query = query.gte('average_rating', filters.min_rating);
+    }
+
+    // Sorting
+    if (filters?.sort_by) {
+      switch (filters.sort_by) {
+        case 'price_low':
+          query = query.order('price', { ascending: true });
+          break;
+        case 'price_high':
+          query = query.order('price', { ascending: false });
+          break;
+        case 'rating':
+          query = query.order('average_rating', { ascending: false });
+          break;
+        case 'newest':
+        default:
+          query = query.order('created_at', { ascending: false });
+          break;
+      }
+    } else {
+      query = query.order('created_at', { ascending: false });
+    }
+
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    const { data, error } = await query
-      .order('created_at', { ascending: false })
-      .range(from, to);
+    const { data, error } = await query.range(from, to);
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  },
+
+  async getPropertiesByType(type: string, limit = 6): Promise<Property[]> {
+    const { data, error } = await supabase
+      .from('properties')
+      .select('*')
+      .eq('accommodation_type', type)
+      .eq('available', true)
+      .order('average_rating', { ascending: false })
+      .limit(limit);
 
     if (error) throw error;
     return Array.isArray(data) ? data : [];
