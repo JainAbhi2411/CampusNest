@@ -45,8 +45,13 @@ const Properties: React.FC = () => {
   }, [searchParams]);
 
   useEffect(() => {
+  const intervalId = setInterval(() => {
     loadProperties();
-  }, [filters, currentPage]);
+  }, 10000); // Poll every 10 seconds
+
+  // Clear the interval when the component unmounts or on filters change
+  return () => clearInterval(intervalId);
+}, [filters, currentPage]); // Re-run when filters or page changes
 
   const loadProperties = async () => {
     setIsLoading(true);
