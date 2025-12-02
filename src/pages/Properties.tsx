@@ -6,17 +6,21 @@ import EnhancedSearchBar from '@/components/property/EnhancedSearchBar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Building2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Building2, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import { propertyApi } from '@/db/api';
+import { supabase } from '@/db/supabase';
 import type { Property, SearchFilters } from '@/types/types';
 import PageMeta from '@/components/common/PageMeta';
+import { useToast } from '@/hooks/use-toast';
 
 const Properties: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<SearchFilters>({});
+  const { toast } = useToast();
   const pageSize = 12;
 
   useEffect(() => {
@@ -45,13 +49,54 @@ const Properties: React.FC = () => {
   }, [searchParams]);
 
   useEffect(() => {
-  const intervalId = setInterval(() => {
     loadProperties();
-  }, 10000); // Poll every 10 seconds
+  }, [filters, currentPage]);
 
-  // Clear the interval when the component unmounts or on filters change
-  return () => clearInterval(intervalId);
-}, [filters, currentPage]); // Re-run when filters or page changes
+   // Real-time subscription for property changes
+  useEffect(() => {
+    const channel = supabase
+      .channel('properties-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'properties'
+        },
+        (payload) => {
+          console.log('Property change detected:', payload);
+          
+          // Show toast notification based on event type
+          if (payload.eventType === 'INSERT') {
+            toast({
+              title: 'New Property Added',
+              description: 'A new property has been added. Refreshing list...',
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            toast({
+              title: 'Property Updated',
+              description: 'A property has been updated. Refreshing list...',
+            });
+          } else if (payload.eventType === 'DELETE') {
+            toast({
+              title: 'Property Deleted',
+              description: 'A property has been removed. Refreshing list...',
+            });
+          }
+          
+          // Reload properties after a short delay
+          setTimeout(() => {
+            loadProperties();
+          }, 500);
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [filters, currentPage]);
 
   const loadProperties = async () => {
     setIsLoading(true);
@@ -60,8 +105,28 @@ const Properties: React.FC = () => {
       setProperties(data);
     } catch (error) {
       console.error('Failed to load properties:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load properties. Please try again.',
+        variant: 'destructive',
+      });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await loadProperties();
+      toast({
+        title: 'Refreshed',
+        description: 'Property list has been updated.',
+      });
+    } catch (error) {
+      console.error('Failed to refresh properties:', error);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -144,8 +209,20 @@ const Properties: React.FC = () => {
                 </div>
               ) : properties.length > 0 ? (
                 <>
-                  <div className="mb-4 text-muted-foreground">
-                    Showing {properties.length} properties
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="text-muted-foreground">
+                      Showing {properties.length} properties
+                    </div>
+                    <Button
+                      onClick={handleManualRefresh}
+                      disabled={isRefreshing}
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                    >
+                      <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                      {isRefreshing ? 'Refreshing...' : 'Refresh'}
+                    </Button>
                   </div>
                   <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     {properties.map((property) => (
