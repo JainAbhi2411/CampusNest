@@ -19,7 +19,7 @@ interface AdvancedFilterPanelProps {
 
 const POPULAR_CITIES = [
   'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai',
-  'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow'
+  'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow' , 'Kota','Jaipur'
 ];
 
 const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFilterChange, onReset }) => {
