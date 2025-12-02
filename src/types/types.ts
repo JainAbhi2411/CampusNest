@@ -203,3 +203,34 @@ export interface LocationData {
   city?: string;
   address?: string;
 }
+
+export interface PropertyComparison {
+  id: string;
+  user_id: string | null;
+  anonymous_id: string | null;
+  property_ids: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ComparisonAnalytics {
+  id: string;
+  property_a_id: string;
+  property_b_id: string;
+  comparison_count: number;
+  last_compared_at: string;
+}
+
+export interface PropertyWithDetails extends Property {
+  owner?: Profile;
+  distance?: number;
+}
+
+export interface ComparisonScore {
+  property_id: string;
+  total_score: number;
+  price_score: number;
+  location_score: number;
+  amenities_score: number;
+  rating_score: number;
+}

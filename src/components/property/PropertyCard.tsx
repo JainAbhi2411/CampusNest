@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, IndianRupee, Eye } from 'lucide-react';
+import { MapPin, IndianRupee, Eye, GitCompare } from 'lucide-react';
+import { useComparison } from '@/contexts/ComparisonContext';
 import type { Property } from '@/types/types';
 
 interface PropertyCardProps {
@@ -11,6 +12,9 @@ interface PropertyCardProps {
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
+  const { isInComparison, addToComparison, removeFromComparison } = useComparison();
+  const inComparison = isInComparison(property.id);
+
   const accommodationTypeLabels = {
     pg: 'PG',
     flat: 'Flat',
@@ -22,6 +26,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
     ? property.images[0]
     : 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80';
 
+  const handleCompareClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (inComparison) {
+      removeFromComparison(property.id);
+    } else {
+      addToComparison(property);
+    }
+  };
+
   return (
     <Card className="overflow-hidden shadow-card hover:shadow-lg transition-smooth group">
       <div className="relative h-48 overflow-hidden">
@@ -30,7 +43,16 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           alt={property.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-smooth"
         />
-        <div className="absolute top-2 right-2">
+        <div className="absolute top-2 right-2 flex gap-2">
+          <Button
+            size="sm"
+            variant={inComparison ? 'default' : 'secondary'}
+            className="h-8 w-8 p-0 rounded-full"
+            onClick={handleCompareClick}
+            title={inComparison ? 'Remove from comparison' : 'Add to comparison'}
+          >
+            <GitCompare className="h-4 w-4" />
+          </Button>
           <Badge variant={property.available ? 'default' : 'secondary'} className="bg-secondary">
             {property.available ? 'Available' : 'Occupied'}
           </Badge>

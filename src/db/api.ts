@@ -17,6 +17,8 @@ import type {
   ReviewWithUser,
   Favorite,
   PropertyView,
+  PropertyComparison,
+  ComparisonScore,
 } from '@/types/types';
 
 // Profile API
@@ -1030,6 +1032,233 @@ export const messApi = {
 
     if (error) throw error;
     return Array.isArray(data) ? data : [];
+  },
+};
+
+// Property Comparison API
+export const comparisonApi = {
+  // Get or create anonymous ID for comparison tracking
+  getAnonymousId(): string {
+    let anonymousId = localStorage.getItem('comparison_anonymous_id');
+    if (!anonymousId) {
+      anonymousId = crypto.randomUUID();
+      localStorage.setItem('comparison_anonymous_id', anonymousId);
+    }
+    return anonymousId;
+  },
+
+  // Get user's current comparison
+  async getCurrentComparison(userId?: string): Promise<PropertyComparison | null> {
+    const anonymousId = this.getAnonymousId();
+    
+    let query = supabase
+      .from('property_comparisons')
+      .select('*')
+      .order('updated_at', { ascending: false })
+      .limit(1);
+
+    if (userId) {
+      query = query.eq('user_id', userId);
+    } else {
+      query = query.eq('anonymous_id', anonymousId);
+    }
+
+    const { data, error } = await query.maybeSingle();
+
+    if (error) throw error;
+    return data;
+  },
+
+  // Add property to comparison
+  async addToComparison(propertyId: string, userId?: string): Promise<PropertyComparison> {
+    const anonymousId = this.getAnonymousId();
+    let comparison = await this.getCurrentComparison(userId);
+
+    if (!comparison) {
+      // Create new comparison
+      const { data, error } = await supabase
+        .from('property_comparisons')
+        .insert({
+          user_id: userId || null,
+          anonymous_id: userId ? null : anonymousId,
+          property_ids: [propertyId],
+        })
+        .select()
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!data) throw new Error('Failed to create comparison');
+      return data;
+    }
+
+    // Add to existing comparison (max 4 properties)
+    if (comparison.property_ids.includes(propertyId)) {
+      return comparison; // Already in comparison
+    }
+
+    if (comparison.property_ids.length >= 4) {
+      throw new Error('Maximum 4 properties can be compared at once');
+    }
+
+    const updatedIds = [...comparison.property_ids, propertyId];
+    
+    // Track analytics for all pairs
+    for (const existingId of comparison.property_ids) {
+      await this.trackComparison(existingId, propertyId);
+    }
+
+    const { data, error } = await supabase
+      .from('property_comparisons')
+      .update({ property_ids: updatedIds })
+      .eq('id', comparison.id)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Failed to update comparison');
+    return data;
+  },
+
+  // Remove property from comparison
+  async removeFromComparison(propertyId: string, userId?: string): Promise<PropertyComparison | null> {
+    const comparison = await this.getCurrentComparison(userId);
+    if (!comparison) return null;
+
+    const updatedIds = comparison.property_ids.filter(id => id !== propertyId);
+
+    if (updatedIds.length === 0) {
+      // Delete comparison if empty
+      await supabase
+        .from('property_comparisons')
+        .delete()
+        .eq('id', comparison.id);
+      return null;
+    }
+
+    const { data, error } = await supabase
+      .from('property_comparisons')
+      .update({ property_ids: updatedIds })
+      .eq('id', comparison.id)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  },
+
+  // Clear all comparisons
+  async clearComparison(userId?: string): Promise<void> {
+    const comparison = await this.getCurrentComparison(userId);
+    if (!comparison) return;
+
+    const { error } = await supabase
+      .from('property_comparisons')
+      .delete()
+      .eq('id', comparison.id);
+
+    if (error) throw error;
+  },
+
+  // Get properties in comparison with full details
+  async getComparisonProperties(userId?: string): Promise<Property[]> {
+    const comparison = await this.getCurrentComparison(userId);
+    if (!comparison || comparison.property_ids.length === 0) {
+      return [];
+    }
+
+    const { data, error } = await supabase
+      .from('properties')
+      .select('*')
+      .in('id', comparison.property_ids);
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  },
+
+  // Track comparison analytics
+  async trackComparison(propertyAId: string, propertyBId: string): Promise<void> {
+    const { error } = await supabase.rpc('increment_comparison_analytics', {
+      prop_a_id: propertyAId,
+      prop_b_id: propertyBId,
+    });
+
+    if (error) {
+      console.error('Failed to track comparison analytics:', error);
+    }
+  },
+
+  // Get frequently compared properties
+  async getFrequentlyCompared(propertyId: string, limit = 5): Promise<Property[]> {
+    const { data: analytics, error: analyticsError } = await supabase
+      .rpc('get_frequently_compared_properties', {
+        target_property_id: propertyId,
+        result_limit: limit,
+      });
+
+    if (analyticsError) throw analyticsError;
+    if (!analytics || analytics.length === 0) return [];
+
+    const propertyIds = analytics.map((a: { property_id: string }) => a.property_id);
+
+    const { data, error } = await supabase
+      .from('properties')
+      .select('*')
+      .in('id', propertyIds);
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  },
+
+  // Calculate comparison scores
+  calculateComparisonScores(properties: Property[]): ComparisonScore[] {
+    if (properties.length === 0) return [];
+
+    // Find min/max values for normalization
+    const prices = properties.map(p => p.price);
+    const ratings = properties.map(p => p.average_rating || 0);
+    const amenityCounts = properties.map(p => p.amenities?.length || 0);
+
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+    const minRating = Math.min(...ratings);
+    const maxRating = Math.max(...ratings);
+    const minAmenities = Math.min(...amenityCounts);
+    const maxAmenities = Math.max(...amenityCounts);
+
+    return properties.map(property => {
+      // Price score (lower is better, so invert)
+      const priceScore = maxPrice === minPrice ? 100 :
+        ((maxPrice - property.price) / (maxPrice - minPrice)) * 100;
+
+      // Rating score (higher is better)
+      const ratingScore = maxRating === minRating ? 100 :
+        ((property.average_rating - minRating) / (maxRating - minRating)) * 100;
+
+      // Amenities score (more is better)
+      const amenitiesCount = property.amenities?.length || 0;
+      const amenitiesScore = maxAmenities === minAmenities ? 100 :
+        ((amenitiesCount - minAmenities) / (maxAmenities - minAmenities)) * 100;
+
+      // Location score (placeholder - could be based on distance to university)
+      const locationScore = 75; // Default score
+
+      // Total score (weighted average)
+      const totalScore = (
+        priceScore * 0.35 +
+        ratingScore * 0.25 +
+        amenitiesScore * 0.25 +
+        locationScore * 0.15
+      );
+
+      return {
+        property_id: property.id,
+        total_score: Math.round(totalScore),
+        price_score: Math.round(priceScore),
+        location_score: Math.round(locationScore),
+        amenities_score: Math.round(amenitiesScore),
+        rating_score: Math.round(ratingScore),
+      };
+    });
   },
 };
 

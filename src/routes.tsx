@@ -3,6 +3,7 @@ import Properties from './pages/Properties';
 import PropertyDetails from './pages/PropertyDetails';
 import MessFacilities from './pages/MessFacilities';
 import MessDetails from './pages/MessDetails';
+import Compare from './pages/Compare';
 import Dashboard from './pages/Dashboard';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
@@ -32,6 +33,12 @@ const routes: RouteConfig[] = [
     name: 'Property Details',
     path: '/property/:id',
     element: <PropertyDetails />,
+    visible: false,
+  },
+  {
+    name: 'Compare Properties',
+    path: '/compare',
+    element: <Compare />,
     visible: false,
   },
   {

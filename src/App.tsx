@@ -3,13 +3,16 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { AuthProvider, RequireAuth } from 'miaoda-auth-react';
 import { Toaster } from 'sonner';
 import { supabase } from '@/db/supabase';
+import { ComparisonProvider } from '@/contexts/ComparisonContext';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
+import ComparisonBar from '@/components/comparison/ComparisonBar';
 import routes from './routes';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isCompareRoute = location.pathname === '/compare';
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -27,6 +30,7 @@ const AppContent: React.FC = () => {
         </Routes>
       </main>
       {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isCompareRoute && <ComparisonBar />}
     </div>
   );
 };
@@ -35,10 +39,12 @@ const App: React.FC = () => {
   return (
     <Router>
       <AuthProvider client={supabase}>
-        <Toaster position="top-center" richColors />
-        <RequireAuth whiteList={["/", "/login", "/properties", "/property/:id", "/mess"]}>
-          <AppContent />
-        </RequireAuth>
+        <ComparisonProvider>
+          <Toaster position="top-center" richColors />
+          <RequireAuth whiteList={["/", "/login", "/properties", "/property/:id", "/compare", "/mess", "/mess/:id"]}>
+            <AppContent />
+          </RequireAuth>
+        </ComparisonProvider>
       </AuthProvider>
     </Router>
   );
