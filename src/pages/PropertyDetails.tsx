@@ -28,9 +28,9 @@ import ShareButton from '@/components/property/ShareButton';
 import ReviewSection from '@/components/property/ReviewSection';
 import RentCalculator from '@/components/property/RentCalculator';
 import Video from '@/components/ui/video';
-import { propertyApi, propertyViewApi } from '@/db/api';
+import { propertyApi, propertyViewApi, profileApi } from '@/db/api';
 import { useAuth } from 'miaoda-auth-react';
-import type { PropertyWithDetails } from '@/types/types';
+import type { PropertyWithDetails, Profile } from '@/types/types';
 import PageMeta from '@/components/common/PageMeta';
 
 const PropertyDetails: React.FC = () => {
@@ -39,6 +39,13 @@ const PropertyDetails: React.FC = () => {
   const [property, setProperty] = useState<PropertyWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [viewCount, setViewCount] = useState(0);
+  const [userProfile, setUserProfile] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      loadUserProfile();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (id) {
@@ -46,6 +53,16 @@ const PropertyDetails: React.FC = () => {
       trackView(id);
     }
   }, [id]);
+
+  const loadUserProfile = async () => {
+    if (!user) return;
+    try {
+      const profile = await profileApi.getProfile(user.id);
+      setUserProfile(profile);
+    } catch (error) {
+      console.error('Failed to load user profile:', error);
+    }
+  };
 
   const loadProperty = async (propertyId: string) => {
     setIsLoading(true);
@@ -327,11 +344,13 @@ const PropertyDetails: React.FC = () => {
 
             <div className="xl:col-span-1">
               <div className="sticky top-20 space-y-6">
-                <BookingForm
-                  propertyId={property.id}
-                  property={property}
-                  onSuccess={() => loadProperty(property.id)}
-                />
+                {userProfile?.role !== 'admin' && (
+                  <BookingForm
+                    propertyId={property.id}
+                    property={property}
+                    onSuccess={() => loadProperty(property.id)}
+                  />
+                )}
                 <RentCalculator property={property} />
               </div>
             </div>

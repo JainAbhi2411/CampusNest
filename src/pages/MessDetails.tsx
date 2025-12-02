@@ -19,8 +19,8 @@ import {
   Leaf,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { messFacilityApi, messReviewApi } from '@/db/api';
-import type { MessFacility, MessReviewWithUser } from '@/types/types';
+import { messFacilityApi, messReviewApi, profileApi } from '@/db/api';
+import type { MessFacility, MessReviewWithUser, Profile } from '@/types/types';
 import MessBookingForm from '@/components/mess/MessBookingForm';
 import ImageGallery from '@/components/property/ImageGallery';
 
@@ -32,6 +32,13 @@ const MessDetails: React.FC = () => {
   const [reviews, setReviews] = useState<MessReviewWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      loadUserProfile();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (id) {
@@ -39,6 +46,16 @@ const MessDetails: React.FC = () => {
       loadReviews(id);
     }
   }, [id]);
+
+  const loadUserProfile = async () => {
+    if (!user) return;
+    try {
+      const profile = await profileApi.getProfile(user.id);
+      setUserProfile(profile);
+    } catch (error) {
+      console.error('Failed to load user profile:', error);
+    }
+  };
 
   const loadMess = async (messId: string) => {
     try {
@@ -332,11 +349,13 @@ const MessDetails: React.FC = () => {
 
           <div className="xl:col-span-1">
             <div className="sticky top-20">
-              <MessBookingForm
-                messId={mess.id}
-                mess={mess}
-                onSuccess={() => loadMess(mess.id)}
-              />
+              {userProfile?.role !== 'admin' && (
+                <MessBookingForm
+                  messId={mess.id}
+                  mess={mess}
+                  onSuccess={() => loadMess(mess.id)}
+                />
+              )}
             </div>
           </div>
         </div>
