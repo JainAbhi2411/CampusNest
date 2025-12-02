@@ -22,6 +22,22 @@ export function ComparisonProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
+  useEffect(() => {
+    const refreshComparison = async () => {
+      try {
+        setIsLoading(true);
+        const properties = await comparisonApi.getComparisonProperties(user?.id);
+        setComparisonProperties(properties);
+      } catch (error) {
+        console.error('Failed to refresh comparison:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    refreshComparison();
+  }, [user?.id]);
+
   const refreshComparison = async () => {
     try {
       setIsLoading(true);
@@ -33,10 +49,6 @@ export function ComparisonProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    refreshComparison();
-  }, [user?.id]);
 
   const isInComparison = (propertyId: string): boolean => {
     return comparisonProperties.some(p => p.id === propertyId);
