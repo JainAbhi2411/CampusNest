@@ -912,3 +912,100 @@ export const propertyViewApi = {
     return count || 0;
   },
 };
+
+// Mess Facility API
+export const messApi = {
+  async getAllMess(): Promise<MessFacility[]> {
+    const { data, error } = await supabase
+      .from('mess_facilities')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  },
+
+  async getMessById(id: string): Promise<MessFacility | null> {
+    const { data, error } = await supabase
+      .from('mess_facilities')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async createMess(messData: Omit<MessFacility, 'id' | 'created_at' | 'updated_at'>): Promise<MessFacility> {
+    const { data, error } = await supabase
+      .from('mess_facilities')
+      .insert(messData)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Failed to create mess facility');
+    return data;
+  },
+
+  async updateMess(id: string, messData: Partial<Omit<MessFacility, 'id' | 'created_at' | 'updated_at'>>): Promise<MessFacility> {
+    const { data, error } = await supabase
+      .from('mess_facilities')
+      .update(messData)
+      .eq('id', id)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Failed to update mess facility');
+    return data;
+  },
+
+  async deleteMess(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('mess_facilities')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  },
+
+  async searchMess(filters: {
+    city?: string;
+    meal_types?: string[];
+    dietary_options?: string[];
+    min_price?: number;
+    max_price?: number;
+  }): Promise<MessFacility[]> {
+    let query = supabase
+      .from('mess_facilities')
+      .select('*')
+      .eq('available', true);
+
+    if (filters.city) {
+      query = query.eq('city', filters.city);
+    }
+
+    if (filters.meal_types && filters.meal_types.length > 0) {
+      query = query.contains('meal_types', filters.meal_types);
+    }
+
+    if (filters.dietary_options && filters.dietary_options.length > 0) {
+      query = query.contains('dietary_options', filters.dietary_options);
+    }
+
+    if (filters.min_price) {
+      query = query.gte('monthly_price', filters.min_price);
+    }
+
+    if (filters.max_price) {
+      query = query.lte('monthly_price', filters.max_price);
+    }
+
+    const { data, error } = await query.order('average_rating', { ascending: false });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  },
+};
+
