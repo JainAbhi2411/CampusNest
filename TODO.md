@@ -617,6 +617,34 @@
   - [x] Smooth momentum scrolling
   - [x] Reduced vertical scrolling on mobile
 
+### Phase 14: Nearby Mess Facilities on Property Details ✅
+- [x] API Development
+  - [x] Add getNearbyMessFacilities function to messFacilityApi
+  - [x] City-based filtering with case-insensitive search
+  - [x] Configurable result limit (default: 5)
+  - [x] Proper error handling and empty array returns
+  
+- [x] Property Details Integration
+  - [x] Add state management for nearby mess data
+  - [x] Load nearby mess when property is loaded
+  - [x] Display up to 4 mess facilities
+  - [x] Automatic loading based on property city
+  
+- [x] UI Components
+  - [x] Section header with icon and "View All" button
+  - [x] Mess facility cards with hover effects
+  - [x] Display name, location, pricing, meal types, cuisine
+  - [x] Loading skeletons during data fetch
+  - [x] Empty state with call-to-action
+  - [x] Clickable cards navigate to mess detail page
+  
+- [x] User Experience
+  - [x] Smooth hover transitions on cards
+  - [x] Responsive layout for all screen sizes
+  - [x] Clear visual hierarchy
+  - [x] Helpful empty state messaging
+  - [x] Quick access to all mess facilities
+
 ## Notes
 - Admin users can now browse the platform as customers would see it, but without booking capabilities
 - This ensures admin accounts are used solely for management purposes
@@ -626,3 +654,4 @@
 - Users can combine text search with any combination of filters for precise results
 - Home search bar now reliably navigates to properties page in all scenarios
 - Property cards now use horizontal scrolling for better mobile experience and modern UI feel
+- Property details now show nearby mess facilities to help students find food options near their accommodation
