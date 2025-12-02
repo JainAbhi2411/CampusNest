@@ -23,7 +23,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
     if (onSearch) {
       onSearch(query);
     } else {
-      navigate(`/properties?search=${encodeURIComponent(query)}`);
+      // Navigate to properties page with search query if provided
+      if (query.trim()) {
+        navigate(`/properties?search=${encodeURIComponent(query)}`);
+      } else {
+        navigate('/properties');
+      }
     }
   };
 

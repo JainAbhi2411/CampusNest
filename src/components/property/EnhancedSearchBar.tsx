@@ -132,7 +132,9 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
         searchParams.set('distance', '10'); // Default 10km
       }
 
-      navigate(`/properties?${searchParams.toString()}`);
+      // Always navigate to properties page, even with empty search
+      const queryString = searchParams.toString();
+      navigate(queryString ? `/properties?${queryString}` : '/properties');
     }
   };
 
