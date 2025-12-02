@@ -77,33 +77,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <section className="py-16 xl:py-24 bg-background">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl xl:text-4xl font-bold mb-4">Why Choose CampusNest?</h2>
-              <p className="text-muted-foreground text-lg">
-                We make finding student accommodation simple and hassle-free
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
-              {features.map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <Card key={index} className="shadow-card hover:shadow-lg transition-smooth">
-                    <CardContent className="p-6 text-center">
-                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary/10 mb-4">
-                        <Icon className="h-8 w-8 text-secondary" />
-                      </div>
-                      <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                      <p className="text-muted-foreground">{feature.description}</p>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        
 
         <section className="py-16 xl:py-24 bg-muted/30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -153,6 +127,33 @@ const Home: React.FC = () => {
         </section>
 
         <CategorySection />
+        <section className="py-16 xl:py-24 bg-background">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl xl:text-4xl font-bold mb-4">Why Choose CampusNest?</h2>
+              <p className="text-muted-foreground text-lg">
+                We make finding student accommodation simple and hassle-free
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+              {features.map((feature, index) => {
+                const Icon = feature.icon;
+                return (
+                  <Card key={index} className="shadow-card hover:shadow-lg transition-smooth">
+                    <CardContent className="p-6 text-center">
+                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary/10 mb-4">
+                        <Icon className="h-8 w-8 text-secondary" />
+                      </div>
+                      <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                      <p className="text-muted-foreground">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
 
         <section className="py-16 xl:py-24 bg-primary text-primary-foreground">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
