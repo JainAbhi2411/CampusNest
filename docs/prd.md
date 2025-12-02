@@ -5,7 +5,7 @@
 StayNearby - Student Accommodation Finder
 
 ### 1.2 Website Description
-An advanced platform designed for students to search, explore, and book nearby accommodations including PGs (Paying Guest), flats, hostels, rooms for rent, and nearby mess facilities. The platform provides detailed property information with immersive viewing experiences, intelligent search capabilities, and convenient booking options.
+An advanced platform designed for students to search, explore, and book nearby accommodations including PGs (Paying Guest), flats, hostels, rooms for rent, and nearby mess facilities. The platform provides detailed property information with immersive viewing experiences, intelligent search capabilities, convenient booking options, and integrated Google Maps for precise location services.
 
 ## 2. Core Features
 ### 2.1 User Authentication
@@ -20,10 +20,25 @@ An advanced platform designed for students to search, explore, and book nearby a
   + Real-time search results update as filters are applied
   + Search query validation and error handling
 
-- **Location Detection & Selection:**
-  + 'Get Current Location' button with GPS auto-detection
+- **Location Detection & Selection with Google Maps:**
+  + **'Get Current Location' button with Google Maps Geolocation API:**
+    * One-click GPS auto-detection using Google Maps Geolocation API
+    * Real-time coordinate capture (latitude and longitude)
+    * Automatic address reverse geocoding to display readable location
+    * Visual confirmation with map preview showing detected location
+    * Location accuracy indicator with error radius display
+    * Permission request handling with clear user instructions
+    * Fallback to IP-based location if GPS unavailable
+    * Loading animation during location detection
+  + **Interactive Google Maps Integration in Search:**
+    * Embedded Google Maps widget in search interface
+    * Click on map to select location manually
+    * Draggable marker for precise location adjustment
+    * Search radius circle overlay showing search area
+    * Auto-zoom to selected location with smooth animation
   + City dropdown selector with search functionality for manual selection
-  + Recent searches quick access\n  + Popular cities quick selection chips
+  + Recent searches quick access with map preview
+  + Popular cities quick selection chips
   + Location permission handling with fallback options
 
 - **Integrated Quick Filters in Search Bar:**
@@ -36,8 +51,8 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Essential amenities checkboxes (WiFi, AC, Parking, Laundry, etc.)
     * Food availability options (Included/Available Nearby/Not Available)
 \n- **Advanced Search Features:**
-  + Radius-based search slider (within 1km, 2km, 5km, 10km) with dynamic map preview
-  + Search by specific area, landmark, or university name with autocomplete
+  + Radius-based search slider (within 1km, 2km, 5km, 10km) with dynamic Google Maps preview showing search circle
+  + Search by specific area, landmark, or university name with Google Maps Places API autocomplete
   + Sort by: Relevance, Price (low to high/high to low), Distance, Rating, Newest
   + Save search preferences with custom naming
   + Search history with one-click reapply and delete option
@@ -57,7 +72,7 @@ An advanced platform designed for students to search, explore, and book nearby a
   + Horizontal scrollable cards on mobile, grid layout on desktop
   + Category-specific sorting options\n  + Empty state messaging when no properties available in category
 
-### 2.4 Enhanced Property Details Display
+### 2.4 Enhanced Property Details Display with Google Maps Integration
 - **Expanded Media Gallery:**
   + **Extensive Photo Collection:**
     * Minimum 20-30 high-resolution images per property
@@ -111,8 +126,7 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Savings meter showing potential discounts
     * Color-coded affordability indicator
 \n- **Comprehensive Property Information:**
-  + Rental pricing with detailed breakdown (rent, deposit, maintenance, electricity, water)
-  + Available from date with calendar view
+  + Rental pricing with detailed breakdown (rent, deposit, maintenance, electricity, water)\n  + Available from date with calendar view
   + Property size and room configuration
   + Detailed facilities and amenities with icons and descriptions
   + Room-wise amenity breakdown
@@ -120,40 +134,57 @@ An advanced platform designed for students to search, explore, and book nearby a
   + House rules and policies section
   + Pet policy and smoking policy indicators
   + Parking availability with slot details
-\n- **Location & Nearby Information with Integrated Mess Display:**
-  + **Interactive Map with Property and Nearby Messes:**
-    * Large interactive map prominently displayed in property details page
-    * Selected accommodation pinned and highlighted at center with custom marker icon
-    * Zoom and pan controls for map exploration
-    * **All nearby mess facilities automatically displayed as markers on the same map**
-    * Different marker icons/colors to distinguish messes from accommodation (e.g., accommodation in blue, messes in orange/red)
-    * Automatic radius-based mess detection (within 1km, 2km, 5km based on user preference or default2km)
-    * Click on mess marker to view quick info popup showing:
+\n- **Google Maps Location & Nearby Information with Integrated Mess Display:**
+  + **Large Interactive Google Maps with Property and Nearby Messes:**
+    * **Prominent Google Maps display prominently positioned in property details page**
+    * Full-width responsive map with zoom controls and street view option
+    * **Selected accommodation property pinned and highlighted at center with custom blue marker icon**
+    * Property marker shows property name on hover
+    * Click property marker to view quick info popup with property photo and key details
+    * **Current user location marker (if permission granted) with distinct icon**
+    * Distance line from user location to property with distance label
+    * **All nearby mess facilities automatically displayed as orange/red markers on the same map**
+    * Automatic radius-based mess detection using Google Maps Distance Matrix API (within 1km, 2km, 5km based on user preference or default 2km)
+    * **Click on mess marker to view quick info popup showing:**
       - Mess name and thumbnail image
-      - Distance from selected accommodation
+      - Distance from selected accommodation (calculated using Google Maps Distance Matrix API)
+      - Walking time estimate from property to mess
       - Star rating and review count
-      - Price range (daily meal cost or monthly subscription)
-      - Cuisine type\n      - 'View Full Details' button linking to complete mess profile page
+      - Price range (daily meal cost or monthly subscription)\n      - Cuisine type\n      - 'View Full Details' button linking to complete mess profile page
+      - 'Get Directions' button opening Google Maps navigation
     * Toggle button to show/hide mess markers on map for cleaner view
     * Cluster markers for multiple messes in close proximity with expand on click
+    * **Map controls:**
+      - Zoom in/out buttons
+      - Full-screen toggle
+      - Map type selector (Roadmap, Satellite, Hybrid, Terrain)
+      - Street View integration with draggable pegman
+      - Current location button to recenter map on user
+    * **Radius circle overlay showing search area for nearby messes**
+    * Adjust radius with slider control (500m, 1km, 2km, 5km, 10km)
+    * Real-time map update as radius changes
+    * **Directions feature:**
+      - Click'Get Directions' on any mess marker\n      - Opens Google Maps Directions API route from property to mess
+      - Shows walking, driving, and public transport routes
+      - Estimated travel time for each mode\n      - Step-by-step directions display
   \n  + **Nearby Mess List Section (Below Map):**
     * Dedicated section titled 'Nearby Mess Facilities' with count indicator
     * **Comprehensive list view of all nearby messes with detailed cards:**
       - Mess thumbnail image with verified badge if applicable
       - Mess name as clickable link to full mess profile
-      - Distance from selected accommodation (e.g., '500m away', '1.2km away')
-      - Walking time estimate (e.g., '6 mins walk')
+      - **Distance from selected accommodation calculated using Google Maps Distance Matrix API (e.g., '500m away', '1.2km away')**
+      - **Walking time estimate using Google Maps Directions API (e.g., '6 mins walk')**
       - Star rating with total review count
       - Cuisine type tags (e.g., North Indian, South Indian, Multi-cuisine)
-      - Pricing information:\n        * Daily meal cost range (e.g., '₹80-120per meal')
+      - Pricing information:\n        * Daily meal cost range (e.g., '₹80-120 per meal')
         * Monthly subscription plans (e.g., '₹3000/month for 2 meals')
       - Meal timings (Breakfast, Lunch, Dinner hours)
       - Key highlights (e.g., 'Home-style cooking', 'Hygienic', 'Trial meal available')
       - Quick action buttons:\n        * 'View Details' - Opens full mess profile page
         * 'Book Trial Meal' - Direct booking option
         * 'View Menu' - Shows current menu
-        * 'Get Directions' - Opens navigation to mess location
-      - 'Show on Map' button to highlight mess marker on map above
+        * **'Get Directions' - Opens Google Maps navigation with route from property to mess**
+      - **'Show on Map' button to highlight and center mess marker on Google Maps above**
     * **Advanced Filtering for Nearby Messes:**
       - Filter by distance (Within 500m, 1km, 2km, 5km)\n      - Filter by cuisine type (North Indian, South Indian, Chinese, Multi-cuisine, etc.)
       - Filter by price range (Budget, Mid-range, Premium)
@@ -171,11 +202,11 @@ An advanced platform designed for students to search, explore, and book nearby a
       - Show count: 'Showing 10 of 25 nearby messes'
   
   + **Additional Location Features:**
-    * Nearby landmarks display (colleges, hospitals, markets, transport) with distance indicators
-    * Distance calculator to user's preferred location
-    * Public transport connectivity details
-    * Walkability score and safety rating
-    * Neighborhood highlights and local amenities
+    * **Nearby landmarks display on Google Maps with custom markers** (colleges, hospitals, markets, transport) with distance indicators
+    * **Distance calculator to user's preferred location using Google Maps Distance Matrix API**
+    * Public transport connectivity details with Google Maps Transit Layer
+    * Walkability score and safety rating\n    * Neighborhood highlights and local amenities
+    * **'Explore Neighborhood' button opening full-screen Google Maps with area highlights**
 \n- **Owner & Contact Details:**
   + Property owner/manager profile with verification badge
   + Contact options: Call, WhatsApp, Email, Chat
@@ -206,10 +237,11 @@ An advanced platform designed for students to search, explore, and book nearby a
 ### 2.6 Enhanced Mess Facilities Features
 - **Comprehensive Mess Search & Discovery:**
   + Dedicated mess search page with advanced filters
-  + Search by location, cuisine type, meal plans, and price range
+  + Search by location using Google Maps Places API autocomplete
+  + Search by cuisine type, meal plans, and price range
   + Filter by dietary preferences (Vegetarian, Non-Vegetarian, Vegan, Jain, Halal)
   + Sort by distance, rating, price, popularity
-  + Map view showing all mess locations with clustering
+  + **Google Maps view showing all mess locations with clustering**
   + List view with detailed mess cards
   + Featured and verified mess badges
   + 'Open Now' indicator with real-time status
@@ -227,6 +259,12 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Hygiene rating and FSSAI license display
     * Years in operation and establishment date
     * Languages spoken by staff
+  + **Google Maps Location Display:**
+    * **Interactive Google Maps showing mess location with custom marker**
+    * **Distance from nearby accommodations calculated using Google Maps Distance Matrix API**
+    * **'Get Directions' button opening Google Maps navigation**
+    * **Street View integration for visual confirmation of location**
+    * **Nearby landmarks and transport options displayed on map**
   + **Menu & Pricing:**
     * Daily menu with meal-wise breakdown (breakfast, lunch, snacks, dinner)
     * Weekly menu calendar view
@@ -245,8 +283,7 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Plan comparison table
     * Discount indicators for longer subscriptions
   + **Facilities & Amenities:**
-    * AC/Non-AC dining area
-    * Parcel and delivery service availability
+    * AC/Non-AC dining area\n    * Parcel and delivery service availability
     * Advance meal ordering option
     * Special diet accommodation (low-carb, high-protein, etc.)
     * Water purifier and drinking water facility
@@ -260,21 +297,12 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Helpful/Not Helpful voting on reviews
     * Owner response to reviews
     * Review submission form with photo upload
-    * Food item-specific ratings
-  + **Location & Accessibility:**
-    * Interactive map with mess location pinned
-    * Distance from nearby accommodations and colleges
-    * Directions and navigation link
-    * Nearby landmarks and transport options
-    * Parking availability information
-    * Delivery radius map for parcel service
-\n- **Mess Booking & Subscription System:**
+    * Food item-specific ratings\n\n- **Mess Booking & Subscription System:**
   + **Trial Meal Booking:**
     * Book single trial meal to test food quality
     * Select meal type (breakfast/lunch/dinner) and date
     * Advance booking up to 7 days
-    * Payment integration for trial meal
-    * Booking confirmation with QR code
+    * Payment integration for trial meal\n    * Booking confirmation with QR code
     * Cancellation option up to 2 hours before meal time
   + **Subscription Booking:**
     * Select meal plan (daily meals, specific meals, custom plan)
@@ -308,7 +336,8 @@ An advanced platform designed for students to search, explore, and book nearby a
   + Visual comparison with charts and tables
   + Highlight best value option
   + Save comparison for later reference
-\n- **Mess Owner Dashboard:**
+
+- **Mess Owner Dashboard:**
   + Mess profile management and updates
   + Daily menu upload and editing
   + Subscription management and tracking
@@ -329,8 +358,7 @@ An advanced platform designed for students to search, explore, and book nearby a
   + Student community reviews and discussions
   + Mess events and special meal announcements
   + Loyalty program and reward points\n  + Referral bonus for bringing new subscribers
-
-### 2.7 Additional Advanced Features
+\n### 2.7 Additional Advanced Features
 - Wishlist/Favorites for saving properties\n- Compare up to 3 properties side-by-side with detailed comparison table
 - Chat system for direct communication with property owners
 - Notification system for new listings and price drops
@@ -388,7 +416,12 @@ An advanced platform designed for students to search, explore, and book nearby a
       - Property name input field
       - Category selector (PG, Flat, Hostel, Room)
       - Property description rich text editor
-      - Location input with map picker for precise coordinates
+      - **Location input with Google Maps integration:**
+        * Search location using Google Maps Places API autocomplete
+        * Click on map to select precise location
+        * Draggable marker for fine-tuning coordinates
+        * Automatic address population from selected coordinates
+        * Current location detection option
       - Address fields (Street, Area, City, State, Pincode)
     * **Step 2 - Property Details:**
       - Room configuration (Number of bedrooms, bathrooms, etc.)
@@ -419,25 +452,20 @@ An advanced platform designed for students to search, explore, and book nearby a
       - 360-degree tour upload or integration link
       - Floor plan upload (PDF or image)
     * **Step 7 - Review & Publish:**
-      - Preview of complete property listing
+      - Preview of complete property listing with Google Maps location display
       - Save as draft option
       - Publish immediately or schedule publish date
       - Validation checks before publishing
   + **Edit Property:**
     * Access existing property details in editable form
     * Same multi-step interface as Add New Property
-    * Edit all property information including:\n      - Basic details (name, category, description, location)
-      - Property specifications (size, rooms, furnishing)
-      - Pricing and charges
-      - Amenities and facilities
-      - House rules and policies
-      - Media gallery (add, remove, reorder images and videos)
-    * Real-time preview of changes
+    * Edit all property information including location with Google Maps\n    * Real-time preview of changes
     * Save changes button with confirmation
     * Publish/Unpublish toggle
     * Delete property option with confirmation modal
   + **Property Detail View (Admin):**
     * Complete property information display
+    * **Google Maps showing property location with marker**
     * All uploaded images in gallery view with edit/delete options
     * Video and 360-tour preview with edit/replace options
     * Booking history for the property
@@ -453,8 +481,7 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Set primary image for property card display
     * Delete multiple images with confirmation
     * Image metadata display (size, format, upload date)
-
-- **User Management Module:**
+\n- **User Management Module:**
   + **User List View:**
     * Table displaying all registered users
     * Columns: User ID, Name, Email, Phone, Registration Date, Status (Active/Suspended), Total Bookings, Actions
@@ -506,6 +533,7 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Add new mess button
   + **Add/Edit Mess:**
     * Mess basic information form
+    * **Location input with Google Maps integration (same as property location input)**
     * Menu management interface
     * Pricing and meal plan setup
     * Operating hours configuration
@@ -563,7 +591,7 @@ An advanced platform designed for students to search, explore, and book nearby a
   + Platform configuration settings
   + Payment gateway settings
   + Email and SMS service configuration
-  + Map API settings
+  + **Google Maps API settings and key management**
   + Notification preferences
   + Security settings (password policy, session timeout)
   + Backup and restore options
@@ -577,7 +605,8 @@ An advanced platform designed for students to search, explore, and book nearby a
   + Real-time notifications for new requests, bookings, reviews\n  + Notification history with read/unread status
   + Notification preferences configuration
   + Send bulk notifications to users
-\n- **Support & Help Desk:**
+
+- **Support & Help Desk:**
   + User support ticket management
   + View and respond to user queries
   + Ticket status tracking (Open, In Progress, Resolved, Closed)
@@ -629,7 +658,7 @@ An advanced platform designed for students to search, explore, and book nearby a
   + Save and share AR room designs\n  + Shopping integration to purchase visualized furniture
 
 - **AR Navigation:**
-  + AR walking directions from current location to property
+  + **AR walking directions from current location to property using Google Maps AR navigation**
   + Overlay directions on real-world view through phone camera
   + Highlight nearby amenities and landmarks in AR view
   + Virtual tour guide with audio narration
@@ -667,7 +696,8 @@ An advanced platform designed for students to search, explore, and book nearby a
 #### 2.9.5 Virtual Reality (VR) Campus & Neighborhood Tours
 - **Immersive VR Experience:**
   + Full VR headset support (Oculus, HTC Vive, etc.)
-  + 360-degree campus walkthrough from accommodation\n  + Virtual neighborhood exploration with key locations\n  + Time-of-day simulation (morning, afternoon, evening, night)
+  + 360-degree campus walkthrough from accommodation\n  + Virtual neighborhood exploration with key locations
+  + Time-of-day simulation (morning, afternoon, evening, night)
   + Weather condition visualization
   + Crowd density simulation during peak hours
   + Safety assessment with crime data overlay
@@ -837,8 +867,8 @@ An advanced platform designed for students to search, explore, and book nearby a
 #### 2.9.16 Micro-Mobility Integration
 - **Transportation Solutions:**
   + Partner with bike and scooter rental services
-  + Display nearby bike-sharing stations on property map
-  + Calculate commute time using various transport modes
+  + **Display nearby bike-sharing stations on Google Maps**
+  + **Calculate commute time using various transport modes with Google Maps Directions API**
   + Integrated booking for micro-mobility services
   + Parking availability for personal bikes/scooters
   + EV charging station locations
@@ -858,11 +888,11 @@ An advanced platform designed for students to search, explore, and book nearby a
 #### 2.9.18 Emergency Response System
 - **Safety Network:**
   + One-touch emergency contact system
-  + Automatic location sharing with emergency contacts
+  + **Automatic location sharing with emergency contacts using Google Maps Geolocation API**
   + Integration with local emergency services
   + Medical emergency protocol guidance
   + Natural disaster preparedness information
-  + Evacuation route mapping
+  + **Evacuation route mapping using Google Maps**
   + Emergency supply checklist
   + Community alert system for urgent situations
 
@@ -887,7 +917,8 @@ An advanced platform designed for students to search, explore, and book nearby a
   + Investment potential for property owners
 
 ## 3. Accommodation Categories\n- Paying Guest (PG) accommodations
-- Flats and apartments\n- Hostels\n- Rooms for rent
+- Flats and apartments
+- Hostels\n- Rooms for rent
 \n## 4. Creative UI Design Style
 ### 4.1 Color Scheme
 - Primary gradient: Deep blue to purple (#2C3E50 to #8E44AD) for modern, trustworthy feel
@@ -909,10 +940,9 @@ An advanced platform designed for students to search, explore, and book nearby a
 - **Search Interface:** Sticky filter sidebar on desktop, collapsible drawer on mobile
 - **Property Grid:** Masonry layout with staggered animation on scroll
 - **Navigation:** Transparent navbar that becomes solid on scroll with smooth transition
-- **Property Details Page:** Prominent map section showing property location with integrated nearby mess markers and detailed mess list below
+- **Property Details Page:** Prominent Google Maps section showing property location with integrated nearby mess markers and detailed mess list below
 - **Admin Dashboard:** Clean, data-focused layout with collapsible sidebar navigation and main content area with card-based widgets
-- **Responsive Breakpoints:** Mobile-first approach with fluid typography scaling
-- **Whitespace:** Generous spacing for breathing room and visual hierarchy
+- **Responsive Breakpoints:** Mobile-first approach with fluid typography scaling\n- **Whitespace:** Generous spacing for breathing room and visual hierarchy
 
 ### 4.4 Typography\n- **Primary Font:** Poppins for headings (bold, modern personality)
 - **Secondary Font:** Inter for body text (excellent readability)
@@ -929,11 +959,10 @@ An advanced platform designed for students to search, explore, and book nearby a
 - **Location Button:** Prominent'Get Current Location' button with GPS icon and loading animation
 - **Category Tabs:** Underline animation on active tab with smooth transition
 - **Calculator Widget:** Floating card design with real-time updates and smooth number transitions
-- **Map Markers:** Custom-designed markers with bounce animation on click, different colors for property vs. mess
-- **Mess Cards:** Hover effect with slight elevation and border highlight
-- **Admin Action Buttons:** Color-coded buttons (Approve: Green, Reject: Red, Edit: Blue, Delete: Red) with confirmation modals
-- **Data Tables:** Sortable columns with hover effects, row selection with checkboxes
-- **Charts & Graphs:** Interactive charts with tooltips and drill-down capabilities
+- **Google Maps Controls:** Custom-styled zoom buttons, map type selector, and full-screen toggle with platform design consistency
+- **Map Markers:** Custom-designed markers with bounce animation on click, different colors for property (blue) vs. mess (orange/red)
+- **Mess Cards:** Hover effect with slight elevation and border highlight\n- **Admin Action Buttons:** Color-coded buttons (Approve: Green, Reject: Red, Edit: Blue, Delete: Red) with confirmation modals
+- **Data Tables:** Sortable columns with hover effects, row selection with checkboxes\n- **Charts & Graphs:** Interactive charts with tooltips and drill-down capabilities
 \n### 4.6 Admin Panel Specific Design
 - **Sidebar Navigation:** Dark-themed collapsible sidebar with icon-based menu items and hover tooltips
 - **Dashboard Cards:** White cards with subtle shadows displaying key metrics with large numbers and trend indicators (up/down arrows)
@@ -946,8 +975,12 @@ An advanced platform designed for students to search, explore, and book nearby a
 - Frontend: React.js with JSX and TypeScript for type safety
 - Backend: Express.js with Node.js\n- Database: MongoDB Atlas with indexing for fast queries
 - **Demo Database:** Pre-populated MongoDB demo database with sample accommodation listings, mess facility data, user data, subscription records, booking records, and admin request data for testing and demonstration purposes
-- Geolocation API for current location detection
-- Google Maps API for location services and map display
+- **Google Maps JavaScript API integration for all map features**
+- **Google Maps Geolocation API for current location detection**
+- **Google Maps Places API for location search and autocomplete**
+- **Google Maps Distance Matrix API for distance and travel time calculations**
+- **Google Maps Directions API for route planning and navigation**
+- **Google Maps Geocoding API for address to coordinates conversion**
 - Image optimization with lazy loading and WebP format\n- Video streaming with adaptive bitrate for smooth playback
 - 360-degree viewer library integration (e.g., Pannellum or Marzipano)
 - Progressive Web App (PWA) capabilities for mobile experience
@@ -962,12 +995,12 @@ An advanced platform designed for students to search, explore, and book nearby a
 - API endpoints for category-based property retrieval, mess facility data, admin request management, and property CRUD operations
 - **Geospatial API endpoints for nearby mess detection:**
   + GET /api/properties/:propertyId/nearby-messes - Returns all mess facilities within specified radius of property coordinates
-  + Query parameters: radius (default 2km), cuisine, priceRange, rating, sortBy\n  + Response includes mess details, distance calculation, and walking time estimate
+  + Query parameters: radius (default 2km), cuisine, priceRange, rating, sortBy\n  + Response includes mess details, distance calculation using Google Maps Distance Matrix API, and walking time estimate
 - Optimized database queries with proper indexing for fast category filtering, request searching, and analytics
 - **Geospatial indexing on mess location coordinates for efficient radius-based queries**
-- Map integration with custom markers for accommodations and nearby messes
+- **Google Maps integration with custom markers for accommodations and nearby messes**
 - **Real-time map marker clustering for multiple messes in close proximity**
-- Geospatial queries for finding nearby mess facilities based on accommodation coordinates
+- **Geospatial queries for finding nearby mess facilities based on accommodation coordinates**
 - Smart rent calculator logic with dynamic pricing algorithms
 - CDN integration for fast media delivery
 - Image gallery with infinite scroll and lazy loading
@@ -990,11 +1023,12 @@ An advanced platform designed for students to search, explore, and book nearby a
 - File upload with drag-and-drop functionality using libraries like Dropzone.js
 - CSV/Excel export functionality using libraries like xlsx or csv-parser
 - PDF generation for reports and invoices using libraries like jsPDF or PDFKit
-- **Distance calculation algorithm (Haversine formula) for accurate distance between property and mess coordinates**
-- **Walking time estimation based on average walking speed (5 km/h) and distance**
+- **Distance calculation using Google Maps Distance Matrix API for accurate distance between property and mess coordinates**
+- **Walking time estimation using Google Maps Directions API with walking mode**
+- **Google Maps API key management with environment variables and usage limits monitoring**
 - **Advanced Feature Implementations:**
   + TensorFlow.js or similar ML library for AI-powered roommate matching algorithm
-  + AR.js or ARCore/ARKit integration for augmented reality features
+  + AR.js or ARCore/ARKit integration for augmented reality features with Google Maps AR navigation
   + Web3.js and Ethereum smart contract integration for blockchain-based rental agreements
   + Cryptocurrency payment gateway (Coinbase Commerce or similar)\n  + Scikit-learn or Prophet for predictive pricing models
   + A-Frame or Three.js for VR environment rendering
@@ -1004,10 +1038,10 @@ An advanced platform designed for students to search, explore, and book nearby a
   + Voice recognition API (Web Speech API or Google Cloud Speech-to-Text)
   + IoT device API integrations (Philips Hue, Nest, Ring, etc.)
   + Gamification engine with points, badges, and leaderboard system
-  + Biometric authentication SDK integration
-  + Push notification service (Firebase Cloud Messaging)\n  + Geofencing for location-based alerts
+  + Biometric authentication SDK integration\n  + Push notification service (Firebase Cloud Messaging)\n  + Geofencing for location-based alerts
   + Time-series database for historical pricing data
-  + Predictive analytics dashboard\n  + Multi-language support with i18n library
+  + Predictive analytics dashboard
+  + Multi-language support with i18n library
   + Accessibility compliance (WCAG 2.1 AA standards)
   + Performance monitoring (Google Lighthouse, New Relic)
   + A/B testing framework for feature optimization
