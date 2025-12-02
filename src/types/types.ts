@@ -177,6 +177,7 @@ export interface BookingWithDetails extends Booking {
 }
 
 export interface SearchFilters {
+  search_query?: string;
   city?: string;
   accommodation_type?: AccommodationType;
   min_price?: number;

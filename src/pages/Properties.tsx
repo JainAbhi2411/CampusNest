@@ -30,6 +30,7 @@ const Properties: React.FC = () => {
     const distance = searchParams.get('distance');
 
     const urlFilters: SearchFilters = {};
+    if (searchQuery) urlFilters.search_query = searchQuery;
     if (city) urlFilters.city = city;
     if (type) urlFilters.accommodation_type = type as any;
     if (minPrice) urlFilters.min_price = Number(minPrice);
@@ -41,10 +42,6 @@ const Properties: React.FC = () => {
     }
 
     setFilters(urlFilters);
-
-    if (searchQuery) {
-      handleSearch(searchQuery);
-    }
   }, [searchParams]);
 
   useEffect(() => {
@@ -63,23 +60,24 @@ const Properties: React.FC = () => {
     }
   };
 
-  const handleSearch = async (query: string) => {
-    setIsLoading(true);
-    try {
-      const data = await propertyApi.searchProperties(query);
-      setProperties(data);
-      setSearchParams({ search: query });
-    } catch (error) {
-      console.error('Search failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleFilterChange = (newFilters: SearchFilters) => {
     setFilters(newFilters);
     setCurrentPage(1);
-    setSearchParams({});
+    
+    // Update URL to reflect current filters
+    const params = new URLSearchParams();
+    if (newFilters.search_query) params.set('search', newFilters.search_query);
+    if (newFilters.city) params.set('city', newFilters.city);
+    if (newFilters.accommodation_type) params.set('type', newFilters.accommodation_type);
+    if (newFilters.min_price !== undefined) params.set('min_price', newFilters.min_price.toString());
+    if (newFilters.max_price !== undefined) params.set('max_price', newFilters.max_price.toString());
+    if (newFilters.latitude && newFilters.longitude) {
+      params.set('lat', newFilters.latitude.toString());
+      params.set('lng', newFilters.longitude.toString());
+      if (newFilters.max_distance) params.set('distance', newFilters.max_distance.toString());
+    }
+    
+    setSearchParams(params);
   };
 
   const handleResetFilters = () => {

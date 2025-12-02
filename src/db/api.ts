@@ -79,6 +79,12 @@ export const propertyApi = {
 
     let query = supabase.from('properties').select('*');
 
+    // Text search filter
+    if (filters?.search_query) {
+      const searchTerm = filters.search_query;
+      query = query.or(`title.ilike.%${searchTerm}%,location.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,address.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+    }
+
     // Basic filters
     if (filters?.city) {
       query = query.eq('city', filters.city);
@@ -152,6 +158,12 @@ export const propertyApi = {
   async getPropertiesByLocation(filters: SearchFilters, page = 1, pageSize = 12): Promise<Property[]> {
     // Get all properties first
     let query = supabase.from('properties').select('*');
+
+    // Text search filter
+    if (filters?.search_query) {
+      const searchTerm = filters.search_query;
+      query = query.or(`title.ilike.%${searchTerm}%,location.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,address.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+    }
 
     // Apply non-location filters
     if (filters?.accommodation_type) {

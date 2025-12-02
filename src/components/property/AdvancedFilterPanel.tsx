@@ -90,6 +90,24 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
+        {filters.search_query && (
+          <div className="space-y-2">
+            <Label>Search Query</Label>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="text-sm py-1.5 px-3">
+                {filters.search_query}
+              </Badge>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onFilterChange({ ...filters, search_query: undefined })}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
+
         <div className="space-y-2">
           <Label htmlFor="city">City</Label>
           <Select
