@@ -1,6 +1,6 @@
-# Welcome to Your Miaoda Project
-Miaoda Application Link URL
-    URL:https://medo.dev/projects/app-7xyosp4kpcld
+# Welcome to Your CampusNest Project
+CampusNest Application Link URL
+    URL:https://campneststay.netlify.app/
 
 # CampusNest - Student Accommodation Platform
 
@@ -286,9 +286,8 @@ All UI components follow shadcn/ui design system with Tailwind CSS for styling.
 
 1. Create a feature branch
 2. Make your changes
-3. Run `npm run lint` to check code quality
-4. Commit with descriptive message
-5. Push and create a pull request
+3. Commit with descriptive message
+4. Push and create a pull request
 
 ### Commit Convention
 
