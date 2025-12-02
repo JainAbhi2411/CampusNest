@@ -91,7 +91,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <PageMeta title="My Dashboard - StayNearby" description="Manage your bookings and account" />
+      <PageMeta title="My Dashboard - CampusNest" description="Manage your bookings and account" />
 
       <div className="min-h-screen bg-muted/30">
         <div className="bg-primary text-primary-foreground py-12">

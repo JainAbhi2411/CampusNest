@@ -29,7 +29,7 @@ const MessFacilities: React.FC = () => {
   return (
     <>
       <PageMeta
-        title="Mess Facilities - StayNearby"
+        title="Mess Facilities - CampusNest"
         description="Browse nearby mess and dining facilities for students"
       />
 

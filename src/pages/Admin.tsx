@@ -78,7 +78,7 @@ const Admin: React.FC = () => {
 
   return (
     <>
-      <PageMeta title="Admin Panel - StayNearby" description="Manage properties, bookings, and platform statistics" />
+      <PageMeta title="Admin Panel - CampusNest" description="Manage properties, bookings, and platform statistics" />
 
       <div className="min-h-screen bg-muted/30">
         <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground py-8 xl:py-12">

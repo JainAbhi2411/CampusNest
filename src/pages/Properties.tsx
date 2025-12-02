@@ -99,7 +99,7 @@ const Properties: React.FC = () => {
   return (
     <>
       <PageMeta
-        title="Browse Properties - StayNearby"
+        title="Browse Properties - CampusNest"
         description="Browse and search student accommodations including PGs, flats, hostels, and rooms"
       />
 

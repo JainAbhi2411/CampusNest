@@ -151,7 +151,7 @@ const PropertyDetails: React.FC = () => {
   return (
     <>
       <PageMeta
-        title={`${property.title} - StayNearby`}
+        title={`${property.title} - CampusNest`}
         description={property.description || `${accommodationTypeLabels[property.accommodation_type]} in ${property.city}`}
       />
 

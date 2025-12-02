@@ -53,7 +53,7 @@ const Header: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2 transition-smooth hover:opacity-80">
               <Building2 className="h-8 w-8 text-secondary" />
-              <span className="text-xl xl:text-2xl font-bold">StayNearby</span>
+              <span className="text-xl xl:text-2xl font-bold">CampusNest</span>
             </Link>
           </div>
 
