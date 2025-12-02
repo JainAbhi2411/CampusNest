@@ -123,9 +123,9 @@ const Home: React.FC = () => {
             </div>
 
             {isLoading ? (
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+              <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
                 {[1, 2, 3].map((i) => (
-                  <Card key={i}>
+                  <Card key={i} className="flex-shrink-0 w-[85vw] xl:w-[calc(33.333%-1rem)] snap-start">
                     <Skeleton className="h-48 w-full bg-muted" />
                     <CardContent className="p-4 space-y-3">
                       <Skeleton className="h-6 w-3/4 bg-muted" />
@@ -136,9 +136,11 @@ const Home: React.FC = () => {
                 ))}
               </div>
             ) : featuredProperties.length > 0 ? (
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+              <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
                 {featuredProperties.map((property) => (
-                  <PropertyCard key={property.id} property={property} />
+                  <div key={property.id} className="flex-shrink-0 w-[85vw] xl:w-[calc(33.333%-1rem)] snap-start">
+                    <PropertyCard property={property} />
+                  </div>
                 ))}
               </div>
             ) : (

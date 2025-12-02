@@ -110,9 +110,9 @@ const CategorySection: React.FC = () => {
               </div>
 
               {isLoading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
                   {[1, 2, 3, 4].map((i) => (
-                    <Card key={i}>
+                    <Card key={i} className="flex-shrink-0 w-[85vw] md:w-[calc(50%-0.75rem)] xl:w-[calc(25%-1.125rem)] snap-start">
                       <Skeleton className="h-48 w-full bg-muted" />
                       <CardContent className="p-4 space-y-3">
                         <Skeleton className="h-6 w-3/4 bg-muted" />
@@ -123,9 +123,11 @@ const CategorySection: React.FC = () => {
                   ))}
                 </div>
               ) : categoriesData[category.type]?.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
                   {categoriesData[category.type].map((property) => (
-                    <PropertyCard key={property.id} property={property} />
+                    <div key={property.id} className="flex-shrink-0 w-[85vw] md:w-[calc(50%-0.75rem)] xl:w-[calc(25%-1.125rem)] snap-start">
+                      <PropertyCard property={property} />
+                    </div>
                   ))}
                 </div>
               ) : (
