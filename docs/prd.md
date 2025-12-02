@@ -10,7 +10,8 @@ An advanced platform designed for students to search, explore, and book nearby a
 ## 2. Core Features
 ### 2.1 User Authentication
 - User registration and login system
-- Secure account management\n- User profile with saved searches and favorites
+- Secure account management
+- User profile with saved searches and favorites
 \n### 2.2 Enhanced Search Bar with Advanced Filters
 - **Prominent Search Bar Design:**
   + Large, centered search bar on homepage with auto-suggest functionality
@@ -105,7 +106,8 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Cost per person calculation for shared accommodations
     * Savings indicator when booking longer durations
     * Export calculation as PDF option
-    * Share calculation via link\n  + **Visual Representation:**
+    * Share calculation via link
+  + **Visual Representation:**
     * Pie chart showing cost distribution\n    * Bar graph comparing different lease duration costs
     * Savings meter showing potential discounts
     * Color-coded affordability indicator
@@ -118,26 +120,61 @@ An advanced platform designed for students to search, explore, and book nearby a
   + House rules and policies section
   + Pet policy and smoking policy indicators
   + Parking availability with slot details
-\n- **Location & Nearby Information:**
-  + Interactive location map with the selected accommodation pinned and highlighted at center
-  + Map marker showing exact property location with custom icon
-  + Zoom and pan controls for map exploration
-  + Nearby landmarks display (colleges, hospitals, markets, transport) with distance indicators
-  + Distance calculator to user's preferred location
-  + **Nearby Mess Display on Map:**
-    * All nearby mess facilities shown as markers on the same map
-    * Different marker icons/colors to distinguish messes from accommodation
-    * Click on mess marker to view quick info popup (name, distance, rating, price range)
-    * List view of nearby messes below the map with:\n      - Mess name and thumbnail image
+\n- **Location & Nearby Information with Integrated Mess Display:**
+  + **Interactive Map with Property and Nearby Messes:**
+    * Large interactive map prominently displayed in property details page
+    * Selected accommodation pinned and highlighted at center with custom marker icon
+    * Zoom and pan controls for map exploration
+    * **All nearby mess facilities automatically displayed as markers on the same map**
+    * Different marker icons/colors to distinguish messes from accommodation (e.g., accommodation in blue, messes in orange/red)
+    * Automatic radius-based mess detection (within 1km, 2km, 5km based on user preference or default 2km)
+    * Click on mess marker to view quick info popup showing:
+      - Mess name and thumbnail image
       - Distance from selected accommodation
-      - Ratings and review count
-      - Pricing information (meal plans, monthly rates)
-      - Cuisine type and meal timings
-      - 'View Details' button linking to full mess information
-      - Filter messes by distance, rating, cuisine type\n    * Toggle to show/hide mess markers on map
-  + Public transport connectivity details
-  + Walkability score and safety rating
-  + Neighborhood highlights and local amenities
+      - Star rating and review count
+      - Price range (daily meal cost or monthly subscription)
+      - Cuisine type\n      - 'View Full Details' button linking to complete mess profile page
+    * Toggle button to show/hide mess markers on map for cleaner view
+    * Cluster markers for multiple messes in close proximity with expand on click
+  \n  + **Nearby Mess List Section (Below Map):**
+    * Dedicated section titled 'Nearby Mess Facilities' with count indicator
+    * **Comprehensive list view of all nearby messes with detailed cards:**
+      - Mess thumbnail image with verified badge if applicable
+      - Mess name as clickable link to full mess profile
+      - Distance from selected accommodation (e.g., '500m away', '1.2km away')
+      - Walking time estimate (e.g., '6 mins walk')
+      - Star rating with total review count
+      - Cuisine type tags (e.g., North Indian, South Indian, Multi-cuisine)
+      - Pricing information:\n        * Daily meal cost range (e.g., '₹80-120 per meal')
+        * Monthly subscription plans (e.g., '₹3000/month for 2 meals')
+      - Meal timings (Breakfast, Lunch, Dinner hours)
+      - Key highlights (e.g., 'Home-style cooking', 'Hygienic', 'Trial meal available')
+      - Quick action buttons:\n        * 'View Details' - Opens full mess profile page
+        * 'Book Trial Meal' - Direct booking option
+        * 'View Menu' - Shows current menu
+        * 'Get Directions' - Opens navigation to mess location
+      - 'Show on Map' button to highlight mess marker on map above
+    * **Advanced Filtering for Nearby Messes:**
+      - Filter by distance (Within 500m, 1km, 2km, 5km)\n      - Filter by cuisine type (North Indian, South Indian, Chinese, Multi-cuisine, etc.)
+      - Filter by price range (Budget, Mid-range, Premium)
+      - Filter by rating (4+ stars, 3+ stars, etc.)
+      - Filter by meal type (Breakfast available, Lunch available, Dinner available, All meals)\n      - Filter by dietary preference (Vegetarian, Non-Vegetarian, Vegan, Jain)\n      - 'Open Now' filter showing only currently operating messes
+    * **Sorting Options:**
+      - Sort by distance (nearest first)
+      - Sort by rating (highest rated first)
+      - Sort by price (low to high, high to low)
+      - Sort by popularity (most subscribed)\n    * **Empty State Handling:**
+      - If no messes found within selected radius, show message: 'No mess facilities found within Xkm. Try expanding search radius.'
+      - Option to expand search radius with one click
+    * **Pagination or Infinite Scroll:**
+      - Load more messes as user scrolls for better performance
+      - Show count: 'Showing 10 of 25 nearby messes'
+  \n  + **Additional Location Features:**
+    * Nearby landmarks display (colleges, hospitals, markets, transport) with distance indicators
+    * Distance calculator to user's preferred location
+    * Public transport connectivity details
+    * Walkability score and safety rating
+    * Neighborhood highlights and local amenities
 \n- **Owner & Contact Details:**
   + Property owner/manager profile with verification badge
   + Contact options: Call, WhatsApp, Email, Chat
@@ -149,7 +186,8 @@ An advanced platform designed for students to search, explore, and book nearby a
   + Review filters (Most Recent, Highest Rated, Verified Tenants)
   + Review helpfulness voting\n  + Owner response to reviews
   + Review submission form for verified tenants
-\n- **Additional Features:**
+
+- **Additional Features:**
   + Similar properties recommendations carousel
   + Price history graph showing rental trends
   + Availability calendar showing occupied/available dates
@@ -179,7 +217,7 @@ An advanced platform designed for students to search, explore, and book nearby a
     * High-resolution photos of mess interior, dining area, kitchen
     * Food photos showcasing daily menu items
     * Video tour of mess facilities
-    *360-degree view of dining area
+    * 360-degree view of dining area
     * Hygiene and cleanliness certification photos
   + **Mess Information:**
     * Mess name, owner details, and contact information
@@ -211,8 +249,7 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Special diet accommodation (low-carb, high-protein, etc.)
     * Water purifier and drinking water facility
     * Handwash and sanitization stations
-    * Seating arrangements (individual tables, group seating)
-    * Takeaway container provision
+    * Seating arrangements (individual tables, group seating)\n    * Takeaway container provision
   + **Reviews & Ratings:**
     * Overall rating with star display and review count
     * Category-wise ratings (Food Quality, Hygiene, Service, Value for Money, Variety)
@@ -229,8 +266,7 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Nearby landmarks and transport options
     * Parking availability information
     * Delivery radius map for parcel service
-
-- **Mess Booking & Subscription System:**
+\n- **Mess Booking & Subscription System:**
   + **Trial Meal Booking:**
     * Book single trial meal to test food quality
     * Select meal type (breakfast/lunch/dinner) and date
@@ -255,8 +291,7 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Pause subscription for specific dates (holidays, travel)\n    * Extend or renew subscription\n    * Upgrade/downgrade meal plan\n    * Add guest meals on-demand
     * View payment history and invoices
     * Download subscription receipt
-    * Feedback and complaint submission
-    * Cancellation request with refund calculation
+    * Feedback and complaint submission\n    * Cancellation request with refund calculation
   + **Meal Ordering Features:**
     * Daily menu preview notification
     * Pre-order meals for next day
@@ -285,13 +320,16 @@ An advanced platform designed for students to search, explore, and book nearby a
 - **Additional Mess Features:**
   + Mess recommendation based on accommodation location
   + Nearby mess widget on accommodation detail page
-  + Mess wishlist and favorites\n  + Share mess details via social media or link
+  + Mess wishlist and favorites
+  + Share mess details via social media or link
   + Report mess for hygiene or service issues
   + Mess verification badge system
   + Student community reviews and discussions
   + Mess events and special meal announcements
-  + Loyalty program and reward points\n  + Referral bonus for bringing new subscribers
-\n### 2.7 Additional Advanced Features
+  + Loyalty program and reward points
+  + Referral bonus for bringing new subscribers
+
+### 2.7 Additional Advanced Features
 - Wishlist/Favorites for saving properties\n- Compare up to 3 properties side-by-side with detailed comparison table
 - Chat system for direct communication with property owners
 - Notification system for new listings and price drops
@@ -323,7 +361,8 @@ An advanced platform designed for students to search, explore, and book nearby a
     * Geographic distribution map showing property density by location
     * Booking trends heatmap (peak days and hours)
   + **Quick Action Cards:**
-    * Add New Property button\n    * View Pending Requests button with count badge
+    * Add New Property button
+    * View Pending Requests button with count badge
     * Manage Users button
     * View Reports button
     * System Settings button
@@ -352,14 +391,15 @@ An advanced platform designed for students to search, explore, and book nearby a
       - Address fields (Street, Area, City, State, Pincode)
     * **Step 2 - Property Details:**
       - Room configuration (Number of bedrooms, bathrooms, etc.)
-      - Property size input (in sq ft)\n      - Furnishing status selector (Fully Furnished, Semi-Furnished, Unfurnished)
+      - Property size input (in sq ft)
+      - Furnishing status selector (Fully Furnished, Semi-Furnished, Unfurnished)
       - Available from date picker
       - Gender preference selector (Male, Female, Co-ed)
-      - Room type options (Single, Double, Triple, Shared)\n    * **Step 3 - Pricing:**
+      - Room type options (Single, Double, Triple, Shared)
+    * **Step 3 - Pricing:**
       - Base rent input field
       - Security deposit amount\n      - Maintenance charges
-      - Utility charges breakdown (Electricity, Water, Gas)
-      - Additional charges (WiFi, Housekeeping, etc.)
+      - Utility charges breakdown (Electricity, Water, Gas)\n      - Additional charges (WiFi, Housekeeping, etc.)
       - Discount options for longer lease durations
     * **Step 4 - Amenities & Facilities:**
       - Checklist of amenities (WiFi, AC, Parking, Laundry, TV, Fridge, etc.)
@@ -542,7 +582,7 @@ An advanced platform designed for students to search, explore, and book nearby a
   + Internal notes for support team
   + Knowledge base management
 
-##3. Accommodation Categories
+## 3. Accommodation Categories
 - Paying Guest (PG) accommodations
 - Flats and apartments
 - Hostels
@@ -569,9 +609,9 @@ An advanced platform designed for students to search, explore, and book nearby a
 - **Search Interface:** Sticky filter sidebar on desktop, collapsible drawer on mobile
 - **Property Grid:** Masonry layout with staggered animation on scroll
 - **Navigation:** Transparent navbar that becomes solid on scroll with smooth transition
+- **Property Details Page:** Prominent map section showing property location with integrated nearby mess markers and detailed mess list below
 - **Admin Dashboard:** Clean, data-focused layout with collapsible sidebar navigation and main content area with card-based widgets
-- **Responsive Breakpoints:** Mobile-first approach with fluid typography scaling
-- **Whitespace:** Generous spacing for breathing room and visual hierarchy
+- **Responsive Breakpoints:** Mobile-first approach with fluid typography scaling\n- **Whitespace:** Generous spacing for breathing room and visual hierarchy
 
 ### 4.4 Typography\n- **Primary Font:** Poppins for headings (bold, modern personality)
 - **Secondary Font:** Inter for body text (excellent readability)
@@ -588,6 +628,8 @@ An advanced platform designed for students to search, explore, and book nearby a
 - **Location Button:** Prominent'Get Current Location' button with GPS icon and loading animation
 - **Category Tabs:** Underline animation on active tab with smooth transition
 - **Calculator Widget:** Floating card design with real-time updates and smooth number transitions
+- **Map Markers:** Custom-designed markers with bounce animation on click, different colors for property vs. mess
+- **Mess Cards:** Hover effect with slight elevation and border highlight
 - **Admin Action Buttons:** Color-coded buttons (Approve: Green, Reject: Red, Edit: Blue, Delete: Red) with confirmation modals
 - **Data Tables:** Sortable columns with hover effects, row selection with checkboxes
 - **Charts & Graphs:** Interactive charts with tooltips and drill-down capabilities
@@ -596,7 +638,8 @@ An advanced platform designed for students to search, explore, and book nearby a
 - **Sidebar Navigation:** Dark-themed collapsible sidebar with icon-based menu items and hover tooltips
 - **Dashboard Cards:** White cards with subtle shadows displaying key metrics with large numbers and trend indicators (up/down arrows)
 - **Data Visualization:** Colorful charts and graphs using Chart.js or similar library with consistent color palette
-- **Form Design:** Clean, organized forms with clear section headers and inline validation\n- **Table Design:** Striped rows for better readability, sticky header on scroll, action buttons in last column
+- **Form Design:** Clean, organized forms with clear section headers and inline validation
+- **Table Design:** Striped rows for better readability, sticky header on scroll, action buttons in last column
 - **Modal Windows:** Centered modals with overlay backdrop for confirmations and detailed views
 - **Notification Badges:** Red circular badges on menu items showing pending action counts
 - **Status Indicators:** Color-coded pills for different statuses (Active: Green, Inactive: Gray, Pending: Yellow, Rejected: Red)
@@ -618,8 +661,13 @@ An advanced platform designed for students to search, explore, and book nearby a
 - Real-time search and filter implementation with debouncing for performance
 - State management for filter persistence and search history
 - API endpoints for category-based property retrieval, mess facility data, admin request management, and property CRUD operations
+- **Geospatial API endpoints for nearby mess detection:**
+  + GET /api/properties/:propertyId/nearby-messes - Returns all mess facilities within specified radius of property coordinates
+  + Query parameters: radius (default 2km), cuisine, priceRange, rating, sortBy\n  + Response includes mess details, distance calculation, and walking time estimate
 - Optimized database queries with proper indexing for fast category filtering, request searching, and analytics
+- **Geospatial indexing on mess location coordinates for efficient radius-based queries**
 - Map integration with custom markers for accommodations and nearby messes
+- **Real-time map marker clustering for multiple messes in close proximity**
 - Geospatial queries for finding nearby mess facilities based on accommodation coordinates
 - Smart rent calculator logic with dynamic pricing algorithms
 - CDN integration for fast media delivery
@@ -643,3 +691,5 @@ An advanced platform designed for students to search, explore, and book nearby a
 - File upload with drag-and-drop functionality using libraries like Dropzone.js
 - CSV/Excel export functionality using libraries like xlsx or csv-parser
 - PDF generation for reports and invoices using libraries like jsPDF or PDFKit
+- **Distance calculation algorithm (Haversine formula) for accurate distance between property and mess coordinates**
+- **Walking time estimation based on average walking speed (5 km/h) and distance**

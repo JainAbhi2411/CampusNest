@@ -28,9 +28,9 @@ import ShareButton from '@/components/property/ShareButton';
 import ReviewSection from '@/components/property/ReviewSection';
 import RentCalculator from '@/components/property/RentCalculator';
 import Video from '@/components/ui/video';
-import { propertyApi, propertyViewApi, profileApi } from '@/db/api';
+import { propertyApi, propertyViewApi, profileApi, messFacilityApi } from '@/db/api';
 import { useAuth } from 'miaoda-auth-react';
-import type { PropertyWithDetails, Profile } from '@/types/types';
+import type { PropertyWithDetails, Profile, MessFacility } from '@/types/types';
 import PageMeta from '@/components/common/PageMeta';
 
 const PropertyDetails: React.FC = () => {
@@ -40,6 +40,8 @@ const PropertyDetails: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [viewCount, setViewCount] = useState(0);
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
+  const [nearbyMess, setNearbyMess] = useState<MessFacility[]>([]);
+  const [isLoadingMess, setIsLoadingMess] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -71,10 +73,27 @@ const PropertyDetails: React.FC = () => {
       setProperty(data);
       const count = await propertyViewApi.getPropertyViewCount(propertyId);
       setViewCount(count);
+      
+      // Load nearby mess facilities
+      if (data?.city) {
+        loadNearbyMess(data.city);
+      }
     } catch (error) {
       console.error('Failed to load property:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadNearbyMess = async (city: string) => {
+    setIsLoadingMess(true);
+    try {
+      const mess = await messFacilityApi.getNearbyMessFacilities(city, 4);
+      setNearbyMess(mess);
+    } catch (error) {
+      console.error('Failed to load nearby mess:', error);
+    } finally {
+      setIsLoadingMess(false);
     }
   };
 
@@ -340,6 +359,100 @@ const PropertyDetails: React.FC = () => {
                   </CardContent>
                 </Card>
               )}
+
+              {/* Nearby Mess Facilities Section */}
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <UtensilsCrossed className="h-5 w-5" />
+                      Nearby Mess Facilities
+                    </CardTitle>
+                    {nearbyMess.length > 0 && (
+                      <Link to="/mess">
+                        <Button variant="ghost" size="sm">
+                          View All
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingMess ? (
+                    <div className="space-y-4">
+                      {[1, 2].map((i) => (
+                        <div key={i} className="space-y-2">
+                          <Skeleton className="h-5 w-3/4 bg-muted" />
+                          <Skeleton className="h-4 w-full bg-muted" />
+                          <Skeleton className="h-4 w-1/2 bg-muted" />
+                        </div>
+                      ))}
+                    </div>
+                  ) : nearbyMess.length > 0 ? (
+                    <div className="space-y-4">
+                      {nearbyMess.map((mess) => (
+                        <Link
+                          key={mess.id}
+                          to={`/mess/${mess.id}`}
+                          className="block p-4 rounded-lg border border-border hover:border-primary transition-smooth hover:shadow-card"
+                        >
+                          <div className="space-y-2">
+                            <div className="flex items-start justify-between gap-2">
+                              <h4 className="font-semibold text-foreground hover:text-primary transition-smooth">
+                                {mess.name}
+                              </h4>
+                              {mess.monthly_price && (
+                                <Badge variant="secondary" className="flex items-center gap-1 flex-shrink-0">
+                                  <IndianRupee className="h-3 w-3" />
+                                  {mess.monthly_price}/mo
+                                </Badge>
+                              )}
+                            </div>
+                            
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <MapPin className="h-4 w-4 flex-shrink-0" />
+                              <span className="line-clamp-1">{mess.location}</span>
+                            </div>
+
+                            {mess.meal_types && mess.meal_types.length > 0 && (
+                              <div className="flex flex-wrap gap-1">
+                                {mess.meal_types.slice(0, 3).map((type, index) => (
+                                  <Badge key={index} variant="outline" className="text-xs">
+                                    {type}
+                                  </Badge>
+                                ))}
+                                {mess.meal_types.length > 3 && (
+                                  <Badge variant="outline" className="text-xs">
+                                    +{mess.meal_types.length - 3} more
+                                  </Badge>
+                                )}
+                              </div>
+                            )}
+
+                            {mess.cuisine_types && mess.cuisine_types.length > 0 && (
+                              <p className="text-sm text-muted-foreground line-clamp-1">
+                                Cuisine: {mess.cuisine_types.join(', ')}
+                              </p>
+                            )}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <UtensilsCrossed className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                      <p className="text-muted-foreground">
+                        No mess facilities found in {property.city}
+                      </p>
+                      <Link to="/mess">
+                        <Button variant="link" className="mt-2">
+                          Browse All Mess Facilities
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
             <div className="xl:col-span-1">

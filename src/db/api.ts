@@ -398,6 +398,18 @@ export const messFacilityApi = {
     const { error } = await supabase.from('mess_facilities').delete().eq('id', id);
     if (error) throw error;
   },
+
+  async getNearbyMessFacilities(city: string, limit = 5): Promise<MessFacility[]> {
+    const { data, error } = await supabase
+      .from('mess_facilities')
+      .select('*')
+      .ilike('city', `%${city}%`)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  },
 };
 
 // Mess Booking API
