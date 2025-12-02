@@ -626,6 +626,104 @@ export const bookingApi = {
     const { error } = await supabase.from('bookings').delete().eq('id', id);
     if (error) throw error;
   },
+
+  async getAdminBookings(filters?: {
+    status?: BookingStatus;
+    booking_type?: BookingType;
+    search?: string;
+    start_date?: string;
+    end_date?: string;
+    property_id?: string;
+    page?: number;
+    pageSize?: number;
+  }): Promise<{ bookings: BookingWithDetails[]; total: number }> {
+    const page = filters?.page || 1;
+    const pageSize = filters?.pageSize || 20;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    let query = supabase
+      .from('bookings')
+      .select('*, property:properties(*), user:profiles(*)', { count: 'exact' });
+
+    if (filters?.status) {
+      query = query.eq('status', filters.status);
+    }
+
+    if (filters?.booking_type) {
+      query = query.eq('booking_type', filters.booking_type);
+    }
+
+    if (filters?.property_id) {
+      query = query.eq('property_id', filters.property_id);
+    }
+
+    if (filters?.start_date) {
+      query = query.gte('booking_date', filters.start_date);
+    }
+
+    if (filters?.end_date) {
+      query = query.lte('booking_date', filters.end_date);
+    }
+
+    query = query.order('booking_date', { ascending: false }).range(from, to);
+
+    const { data, error, count } = await query;
+
+    if (error) throw error;
+
+    let bookings = Array.isArray(data) ? data : [];
+
+    if (filters?.search && filters.search.trim()) {
+      const searchLower = filters.search.toLowerCase();
+      bookings = bookings.filter((booking) => {
+        const userName = booking.user?.username?.toLowerCase() || '';
+        const userFullName = booking.user?.full_name?.toLowerCase() || '';
+        const propertyTitle = booking.property?.title?.toLowerCase() || '';
+        const propertyLocation = booking.property?.location?.toLowerCase() || '';
+        
+        return (
+          userName.includes(searchLower) ||
+          userFullName.includes(searchLower) ||
+          propertyTitle.includes(searchLower) ||
+          propertyLocation.includes(searchLower)
+        );
+      });
+    }
+
+    return {
+      bookings,
+      total: count || 0,
+    };
+  },
+
+  async getBookingStats(): Promise<{
+    total: number;
+    pending: number;
+    confirmed: number;
+    completed: number;
+    cancelled: number;
+    visit_requests: number;
+    direct_bookings: number;
+  }> {
+    const { data: allBookings, error } = await supabase
+      .from('bookings')
+      .select('status, booking_type');
+
+    if (error) throw error;
+
+    const bookings = Array.isArray(allBookings) ? allBookings : [];
+
+    return {
+      total: bookings.length,
+      pending: bookings.filter((b) => b.status === 'pending').length,
+      confirmed: bookings.filter((b) => b.status === 'confirmed').length,
+      completed: bookings.filter((b) => b.status === 'completed').length,
+      cancelled: bookings.filter((b) => b.status === 'cancelled').length,
+      visit_requests: bookings.filter((b) => b.booking_type === 'visit').length,
+      direct_bookings: bookings.filter((b) => b.booking_type === 'room').length,
+    };
+  },
 };
 
 // Storage API
