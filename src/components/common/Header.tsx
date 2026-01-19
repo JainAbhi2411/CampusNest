@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "miaoda-auth-react";
 import { Button } from "@/components/ui/button";
-import { Home, Building2, UtensilsCrossed, User, LogOut, Menu, X, Shield } from "lucide-react";
+import { Home, Building2, UtensilsCrossed, User, LogOut, Menu, X, Shield, Info, BookOpen } from "lucide-react";
 import { profileApi } from "@/db/api";
 import type { Profile } from "@/types/types";
 import routes from "../../routes";
@@ -44,6 +44,8 @@ const Header: React.FC = () => {
     { name: 'Home', path: '/', icon: Home },
     { name: 'Properties', path: '/properties', icon: Building2 },
     { name: 'Mess Facilities', path: '/mess', icon: UtensilsCrossed },
+    { name: 'About Us', path: '/about', icon: Info },
+    { name: 'Blog', path: '/blog', icon: BookOpen },
   ];
 
   return (
@@ -53,7 +55,7 @@ const Header: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2 transition-smooth hover:opacity-80">
               <Building2 className="h-8 w-8 text-secondary" />
-              <span className="text-xl xl:text-2xl font-bold">RoomSaathi</span>
+              <span className="text-xl xl:text-2xl font-bold">Roomsaathi</span>
             </Link>
           </div>
 
