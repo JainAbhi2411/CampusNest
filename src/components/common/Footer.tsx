@@ -84,11 +84,14 @@ const Footer: React.FC = () => {
                 <a href="tel:+917374035907" className="hover:text-secondary transition-smooth">
                   +91 7374035907
                 </a>
+                 <a href="tel:+917374035907" className="hover:text-secondary transition-smooth">
+                  +91 8000706380
+                </a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-secondary flex-shrink-0" />
-                <a href="mailto:jainabhi7374@gmail.com" className="hover:text-secondary transition-smooth break-all">
-                  jainabhi7374@gmail.com
+                <a href="mailto:roomsaathi@gmail.com" className="hover:text-secondary transition-smooth break-all">
+                  roomsaathi@gmail.com
                 </a>
               </div>
             </div>
