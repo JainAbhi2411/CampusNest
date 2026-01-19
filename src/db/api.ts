@@ -1262,3 +1262,205 @@ export const comparisonApi = {
   },
 };
 
+// Blog API
+export const blogApi = {
+  async getCategories(): Promise<import('@/types/types').BlogCategory[]> {
+    const { data, error } = await supabase
+      .from('blog_categories')
+      .select('*')
+      .order('name');
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getTags(): Promise<import('@/types/types').BlogTag[]> {
+    const { data, error } = await supabase
+      .from('blog_tags')
+      .select('*')
+      .order('name');
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getBlogPosts(
+    filters?: {
+      category?: string;
+      tag?: string;
+      search?: string;
+      featured?: boolean;
+    },
+    page = 1,
+    limit = 9
+  ): Promise<import('@/types/types').BlogPost[]> {
+    let query = supabase
+      .from('blog_posts')
+      .select(`
+        *,
+        category:blog_categories(*),
+        author:profiles(*)
+      `)
+      .eq('is_published', true)
+      .order('published_at', { ascending: false });
+
+    if (filters?.category) {
+      const { data: category } = await supabase
+        .from('blog_categories')
+        .select('id')
+        .eq('slug', filters.category)
+        .maybeSingle();
+      
+      if (category) {
+        query = query.eq('category_id', category.id);
+      }
+    }
+
+    if (filters?.featured) {
+      query = query.eq('is_featured', true);
+    }
+
+    if (filters?.search) {
+      query = query.or(`title.ilike.%${filters.search}%,excerpt.ilike.%${filters.search}%`);
+    }
+
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    query = query.range(from, to);
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getBlogPostBySlug(slug: string): Promise<import('@/types/types').BlogPost | null> {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select(`
+        *,
+        category:blog_categories(*),
+        author:profiles(*)
+      `)
+      .eq('slug', slug)
+      .eq('is_published', true)
+      .maybeSingle();
+
+    if (error) throw error;
+    
+    // Increment views
+    if (data) {
+      await supabase.rpc('increment_blog_views', { post_id: data.id });
+    }
+
+    return data;
+  },
+
+  async getFeaturedPosts(limit = 3): Promise<import('@/types/types').BlogPost[]> {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select(`
+        *,
+        category:blog_categories(*),
+        author:profiles(*)
+      `)
+      .eq('is_published', true)
+      .eq('is_featured', true)
+      .order('published_at', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getRelatedPosts(postId: string, categoryId: string, limit = 3): Promise<import('@/types/types').BlogPost[]> {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select(`
+        *,
+        category:blog_categories(*),
+        author:profiles(*)
+      `)
+      .eq('is_published', true)
+      .eq('category_id', categoryId)
+      .neq('id', postId)
+      .order('published_at', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getPopularPosts(limit = 5): Promise<import('@/types/types').BlogPost[]> {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select(`
+        *,
+        category:blog_categories(*),
+        author:profiles(*)
+      `)
+      .eq('is_published', true)
+      .order('views', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async addReaction(postId: string, userId: string, reactionType: 'like' | 'love' | 'insightful' | 'helpful'): Promise<void> {
+    const { error } = await supabase
+      .from('blog_reactions')
+      .insert({
+        blog_post_id: postId,
+        user_id: userId,
+        reaction_type: reactionType,
+      });
+
+    if (error) throw error;
+  },
+
+  async removeReaction(postId: string, userId: string, reactionType: string): Promise<void> {
+    const { error } = await supabase
+      .from('blog_reactions')
+      .delete()
+      .eq('blog_post_id', postId)
+      .eq('user_id', userId)
+      .eq('reaction_type', reactionType);
+
+    if (error) throw error;
+  },
+
+  async getUserReactions(postId: string, userId: string): Promise<import('@/types/types').BlogReaction[]> {
+    const { data, error } = await supabase
+      .from('blog_reactions')
+      .select('*')
+      .eq('blog_post_id', postId)
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getPostReactionCounts(postId: string): Promise<Record<string, number>> {
+    const { data, error } = await supabase
+      .from('blog_reactions')
+      .select('reaction_type')
+      .eq('blog_post_id', postId);
+
+    if (error) throw error;
+
+    const counts: Record<string, number> = {
+      like: 0,
+      love: 0,
+      insightful: 0,
+      helpful: 0,
+    };
+
+    data?.forEach((reaction) => {
+      counts[reaction.reaction_type] = (counts[reaction.reaction_type] || 0) + 1;
+    });
+
+    return counts;
+  },
+};
+
