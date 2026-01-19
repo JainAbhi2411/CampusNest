@@ -56,7 +56,7 @@ const Home: React.FC = () => {
   return (
     <>
       <PageMeta
-        title="CampusNest - Find Your Perfect Student Accommodation"
+        title="RoomSaathi - Find Your Perfect Student Accommodation"
         description="Search and book student accommodations including PGs, flats, hostels, and rooms near your campus"
       />
 
@@ -130,7 +130,7 @@ const Home: React.FC = () => {
         <section className="py-16 xl:py-24 bg-background">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl xl:text-4xl font-bold mb-4">Why Choose CampusNest?</h2>
+              <h2 className="text-3xl xl:text-4xl font-bold mb-4">Why Choose RoomSaathi?</h2>
               <p className="text-muted-foreground text-lg">
                 We make finding student accommodation simple and hassle-free
               </p>
@@ -161,7 +161,7 @@ const Home: React.FC = () => {
               Ready to Find Your Perfect Stay?
             </h2>
             <p className="text-lg xl:text-xl mb-8 text-primary-foreground/90">
-              Join thousands of students who have found their ideal accommodation through CampusNest
+              Join thousands of students who have found their ideal accommodation through RoomSaathi
             </p>
             <Link to="/properties">
               <Button size="lg" variant="secondary">
