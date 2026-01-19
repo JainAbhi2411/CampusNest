@@ -119,6 +119,51 @@ export interface MessReviewWithUser extends MessReview {
   user?: Profile;
 }
 
+export interface BlogCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  created_at: string;
+}
+
+export interface BlogTag {
+  id: string;
+  name: string;
+  slug: string;
+  created_at: string;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  featured_image?: string;
+  category_id?: string;
+  author_id: string;
+  read_time: number;
+  views: number;
+  reaction_count: number;
+  is_featured: boolean;
+  is_published: boolean;
+  published_at?: string;
+  created_at: string;
+  updated_at: string;
+  category?: BlogCategory;
+  author?: Profile;
+  tags?: BlogTag[];
+}
+
+export interface BlogReaction {
+  id: string;
+  blog_post_id: string;
+  user_id: string;
+  reaction_type: 'like' | 'love' | 'insightful' | 'helpful';
+  created_at: string;
+}
+
 export interface Booking {
   id: string;
   property_id: string;
