@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Building2, Mail, Phone, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 
 const Footer: React.FC = () => {
@@ -7,14 +8,14 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-primary text-primary-foreground border-t border-primary-light">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Building2 className="h-6 w-6 text-secondary" />
-              <h3 className="text-lg font-semibold">RoomSaathi</h3>
+              <h3 className="text-lg font-semibold">Roomsaathi</h3>
             </div>
             <p className="text-primary-foreground/80 mb-4">
-              Your trusted platform for finding the perfect student accommodation. 
+              Your trusted companion for finding the perfect student accommodation. 
               We connect students with quality PGs, flats, hostels, and rooms near their campus.
             </p>
             <div className="flex gap-4">
@@ -58,23 +59,36 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <div className="text-primary-foreground/80 space-y-2">
+              <Link to="/properties" className="block hover:text-secondary transition-smooth">
+                Find Properties
+              </Link>
+              <Link to="/mess" className="block hover:text-secondary transition-smooth">
+                Mess Facilities
+              </Link>
+              <Link to="/about" className="block hover:text-secondary transition-smooth">
+                About Us
+              </Link>
+              <Link to="/blog" className="block hover:text-secondary transition-smooth">
+                Blog
+              </Link>
+            </div>
+          </div>
+
+          <div>
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <div className="text-primary-foreground/80 space-y-3">
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-secondary flex-shrink-0" />
                 <a href="tel:+917374035907" className="hover:text-secondary transition-smooth">
-                  +91 7374035907 
-                  
-                </a>
-                <a href="tel:+917374035907" className="hover:text-secondary transition-smooth">
-                  +91 8000706380 
-                  
+                  +91 7374035907
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-secondary flex-shrink-0" />
-                <a href="mailto:RoomSaathi@gmail.com" className="hover:text-secondary transition-smooth break-all">
-                  RoomSaathi@gmail.com
+                <a href="mailto:jainabhi7374@gmail.com" className="hover:text-secondary transition-smooth break-all">
+                  jainabhi7374@gmail.com
                 </a>
               </div>
             </div>
@@ -82,16 +96,19 @@ const Footer: React.FC = () => {
 
           <div>
             <h3 className="text-lg font-semibold mb-4">Support Hours</h3>
-            <div className="text-primary-foreground/80 space-y-2">
+            <div className="text-primary-foreground/80 space-y-2 mb-4">
               <p>Monday - Friday: 9:00 AM - 8:00 PM</p>
               <p>Saturday: 10:00 AM - 6:00 PM</p>
               <p>Sunday: Closed</p>
             </div>
+            <Link to="/terms" className="text-primary-foreground/80 hover:text-secondary transition-smooth text-sm">
+              Terms & Conditions
+            </Link>
           </div>
         </div>
 
         <div className="mt-8 pt-8 border-t border-primary-light text-center text-primary-foreground/80">
-          <p>{currentYear} RoomSaathi</p>
+          <p>© {currentYear} Roomsaathi. All rights reserved.</p>
         </div>
       </div>
     </footer>
