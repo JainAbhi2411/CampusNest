@@ -7,6 +7,10 @@ import Compare from './pages/Compare';
 import Dashboard from './pages/Dashboard';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
+import AboutUs from './pages/AboutUs';
+import Blogs from './pages/Blogs';
+import BlogPost from './pages/BlogPost';
+import TermsAndConditions from './pages/TermsAndConditions';
 import type { ReactNode } from 'react';
 
 interface RouteConfig {
@@ -51,6 +55,30 @@ const routes: RouteConfig[] = [
     name: 'Mess Details',
     path: '/mess/:id',
     element: <MessDetails />,
+    visible: false,
+  },
+  {
+    name: 'About Us',
+    path: '/about',
+    element: <AboutUs />,
+    visible: false,
+  },
+  {
+    name: 'Blog',
+    path: '/blog',
+    element: <Blogs />,
+    visible: false,
+  },
+  {
+    name: 'Blog Post',
+    path: '/blog/:slug',
+    element: <BlogPost />,
+    visible: false,
+  },
+  {
+    name: 'Terms and Conditions',
+    path: '/terms',
+    element: <TermsAndConditions />,
     visible: false,
   },
   {
