@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Building2 className="h-6 w-6 text-secondary" />
-              <h3 className="text-lg font-semibold">CampusNest</h3>
+              <h3 className="text-lg font-semibold">RoomSaathi</h3>
             </div>
             <p className="text-primary-foreground/80 mb-4">
               Your trusted platform for finding the perfect student accommodation. 
@@ -63,13 +63,18 @@ const Footer: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-secondary flex-shrink-0" />
                 <a href="tel:+917374035907" className="hover:text-secondary transition-smooth">
-                  +91 7374035907
+                  +91 7374035907 
+                  
+                </a>
+                <a href="tel:+917374035907" className="hover:text-secondary transition-smooth">
+                  +91 8000706380 
+                  
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-secondary flex-shrink-0" />
-                <a href="mailto:jainabhi7374@gmail.com" className="hover:text-secondary transition-smooth break-all">
-                  jainabhi7374@gmail.com
+                <a href="mailto:RoomSaathi@gmail.com" className="hover:text-secondary transition-smooth break-all">
+                  RoomSaathi@gmail.com
                 </a>
               </div>
             </div>
@@ -86,7 +91,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="mt-8 pt-8 border-t border-primary-light text-center text-primary-foreground/80">
-          <p>{currentYear} CampusNest</p>
+          <p>{currentYear} RoomSaathi</p>
         </div>
       </div>
     </footer>
