@@ -52,7 +52,7 @@ const Properties: React.FC = () => {
     loadProperties();
   }, [filters, currentPage]);
 
-   // Real-time subscription for property changes
+  // Real-time subscription for property changes
   useEffect(() => {
     const channel = supabase
       .channel('properties-changes')
@@ -169,7 +169,7 @@ const Properties: React.FC = () => {
   return (
     <>
       <PageMeta
-        title="Browse Properties - CampusNest"
+        title="Browse Properties - Roomsaathi"
         description="Browse and search student accommodations including PGs, flats, hostels, and rooms"
       />
 
@@ -195,14 +195,14 @@ const Properties: React.FC = () => {
 
             <div className="xl:col-span-3">
               {isLoading ? (
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 xl:gap-6">
                   {[1, 2, 3, 4, 5, 6].map((i) => (
                     <Card key={i}>
-                      <Skeleton className="h-48 w-full bg-muted" />
-                      <CardContent className="p-4 space-y-3">
-                        <Skeleton className="h-6 w-3/4 bg-muted" />
-                        <Skeleton className="h-4 w-full bg-muted" />
-                        <Skeleton className="h-4 w-2/3 bg-muted" />
+                      <Skeleton className="h-32 xl:h-48 w-full bg-muted" />
+                      <CardContent className="p-2 xl:p-4 space-y-2 xl:space-y-3">
+                        <Skeleton className="h-4 xl:h-6 w-3/4 bg-muted" />
+                        <Skeleton className="h-3 xl:h-4 w-full bg-muted" />
+                        <Skeleton className="h-3 xl:h-4 w-2/3 bg-muted" />
                       </CardContent>
                     </Card>
                   ))}
@@ -210,7 +210,7 @@ const Properties: React.FC = () => {
               ) : properties.length > 0 ? (
                 <>
                   <div className="mb-4 flex items-center justify-between">
-                    <div className="text-muted-foreground">
+                    <div className="text-xs xl:text-sm text-muted-foreground">
                       Showing {properties.length} properties
                     </div>
                     <Button
@@ -218,13 +218,13 @@ const Properties: React.FC = () => {
                       disabled={isRefreshing}
                       variant="outline"
                       size="sm"
-                      className="gap-2"
+                      className="gap-2 h-8 xl:h-9 text-xs xl:text-sm"
                     >
-                      <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                      <RefreshCw className={`h-3 w-3 xl:h-4 xl:w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                       {isRefreshing ? 'Refreshing...' : 'Refresh'}
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 xl:gap-6">
                     {properties.map((property) => (
                       <PropertyCard key={property.id} property={property} />
                     ))}
