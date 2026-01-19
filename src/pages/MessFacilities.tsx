@@ -29,7 +29,7 @@ const MessFacilities: React.FC = () => {
   return (
     <>
       <PageMeta
-        title="Mess Facilities - CampusNest"
+        title="Mess Facilities - Roomsaathi"
         description="Browse nearby mess and dining facilities for students"
       />
 
@@ -45,18 +45,18 @@ const MessFacilities: React.FC = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 xl:gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="space-y-3">
-                  <Skeleton className="h-48 w-full" />
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-2/3" />
+                <div key={i} className="space-y-2 xl:space-y-3">
+                  <Skeleton className="h-32 xl:h-48 w-full bg-muted" />
+                  <Skeleton className="h-4 xl:h-6 w-3/4 bg-muted" />
+                  <Skeleton className="h-3 xl:h-4 w-full bg-muted" />
+                  <Skeleton className="h-3 xl:h-4 w-2/3 bg-muted" />
                 </div>
               ))}
             </div>
           ) : facilities.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 xl:gap-6">
               {facilities.map((facility) => (
                 <MessCard key={facility.id} mess={facility} />
               ))}
