@@ -37,55 +37,55 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
 
   return (
     <Card className="overflow-hidden shadow-card hover:shadow-lg transition-smooth group">
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-32 xl:h-48 overflow-hidden">
         <img
           src={mainImage}
           alt={property.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-smooth"
         />
-        <div className="absolute top-2 right-2 flex gap-2">
+        <div className="absolute top-1 xl:top-2 right-1 xl:right-2 flex gap-1 xl:gap-2">
           <Button
             size="sm"
             variant={inComparison ? 'default' : 'secondary'}
-            className="h-8 w-8 p-0 rounded-full"
+            className="h-6 w-6 xl:h-8 xl:w-8 p-0 rounded-full"
             onClick={handleCompareClick}
             title={inComparison ? 'Remove from comparison' : 'Add to comparison'}
           >
-            <GitCompare className="h-4 w-4" />
+            <GitCompare className="h-3 w-3 xl:h-4 xl:w-4" />
           </Button>
-          <Badge variant={property.available ? 'default' : 'secondary'} className="bg-secondary">
+          <Badge variant={property.available ? 'default' : 'secondary'} className="bg-secondary text-xs xl:text-sm px-1.5 xl:px-2 py-0.5">
             {property.available ? 'Available' : 'Occupied'}
           </Badge>
         </div>
-        <div className="absolute top-2 left-2">
-          <Badge variant="outline" className="bg-background/90">
+        <div className="absolute top-1 xl:top-2 left-1 xl:left-2">
+          <Badge variant="outline" className="bg-background/90 text-xs xl:text-sm px-1.5 xl:px-2 py-0.5">
             {accommodationTypeLabels[property.accommodation_type]}
           </Badge>
         </div>
       </div>
 
-      <CardContent className="p-4">
-        <h3 className="text-lg font-semibold mb-2 line-clamp-1">{property.title}</h3>
-        <div className="flex items-center text-muted-foreground text-sm mb-3">
-          <MapPin className="h-4 w-4 mr-1" />
+      <CardContent className="p-2 xl:p-4">
+        <h3 className="text-sm xl:text-lg font-semibold mb-1 xl:mb-2 line-clamp-1">{property.title}</h3>
+        <div className="flex items-center text-muted-foreground text-xs xl:text-sm mb-2 xl:mb-3">
+          <MapPin className="h-3 w-3 xl:h-4 xl:w-4 mr-1 flex-shrink-0" />
           <span className="line-clamp-1">{property.location}, {property.city}</span>
         </div>
-        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+        <p className="text-xs xl:text-sm text-muted-foreground line-clamp-2 mb-2 xl:mb-3 hidden xl:block">
           {property.description || 'No description available'}
         </p>
-        <div className="flex items-center gap-2">
-          <IndianRupee className="h-5 w-5 text-secondary" />
-          <span className="text-xl font-bold text-primary">
+        <div className="flex items-center gap-1 xl:gap-2">
+          <IndianRupee className="h-4 w-4 xl:h-5 xl:w-5 text-secondary" />
+          <span className="text-base xl:text-xl font-bold text-primary">
             {property.price.toLocaleString()}
           </span>
-          <span className="text-sm text-muted-foreground">/ {property.price_period}</span>
+          <span className="text-xs xl:text-sm text-muted-foreground">/ {property.price_period}</span>
         </div>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="p-2 xl:p-4 xl:pt-0 pt-0">
         <Link to={`/property/${property.id}`} className="w-full">
-          <Button className="w-full" variant="default">
-            <Eye className="h-4 w-4 mr-2" />
+          <Button className="w-full h-8 xl:h-10 text-xs xl:text-sm" variant="default">
+            <Eye className="h-3 w-3 xl:h-4 xl:w-4 mr-1 xl:mr-2" />
             View Details
           </Button>
         </Link>
