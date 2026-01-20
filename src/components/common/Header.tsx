@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { profileApi } from "@/db/api";
 import type { Profile } from "@/types/types";
-import logo from "@/public/images/logo/logo.png";
+
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -64,7 +64,7 @@ const Header: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2 hover:opacity-80">
               <img
-                src={logo}
+                src="/images/logo/logo.png"
                 alt="Roomsaathi Logo"
                 loading="eager"
                 className="h-8 w-8 xl:h-9 xl:w-9 object-contain drop-shadow-sm"
