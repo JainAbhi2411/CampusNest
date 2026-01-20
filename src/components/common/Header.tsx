@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { profileApi } from "@/db/api";
 import type { Profile } from "@/types/types";
-import logo from "@/public/images/logo";
+import logo from "@/public/images/logo/logo.png";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
