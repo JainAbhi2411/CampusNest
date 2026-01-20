@@ -64,7 +64,7 @@ const Header: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2 hover:opacity-80">
               <img
-                src="/images/logo/logo.png"
+                src="/images/logo/mainlogo.png"
                 alt="Roomsaathi Logo"
                 loading="eager"
                 className="h-8 w-8 xl:h-9 xl:w-9 object-contain drop-shadow-sm"
