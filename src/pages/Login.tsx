@@ -95,13 +95,13 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <PageMeta title="Login - CampusNest" description="Login to your CampusNest account" />
+      <PageMeta title="Login - Roomsaathi" description="Login to your Roomsaathi account" />
       <div className="min-h-screen flex items-center justify-center bg-muted/30 py-12 px-4">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
               <Building2 className="h-10 w-10 text-primary" />
-              <h1 className="text-3xl font-bold text-primary">CampusNest</h1>
+              <h1 className="text-3xl font-bold text-primary">Roomsaathi</h1>
             </div>
             <p className="text-muted-foreground">Find your perfect student accommodation</p>
           </div>
