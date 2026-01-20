@@ -2,24 +2,31 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "miaoda-auth-react";
 import { Button } from "@/components/ui/button";
-import { Home, Building2, UtensilsCrossed, User, LogOut, Menu, X, Shield, Info, BookOpen } from "lucide-react";
+import {
+  Home,
+  Building2,
+  UtensilsCrossed,
+  User,
+  LogOut,
+  Menu,
+  X,
+  Shield,
+  Info,
+  BookOpen,
+  PlusCircle,
+} from "lucide-react";
 import { profileApi } from "@/db/api";
 import type { Profile } from "@/types/types";
-import routes from "../../routes";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
   const location = useLocation();
   const { user, logout } = useAuth();
-  const navigation = routes.filter((route) => route.visible !== false);
 
   useEffect(() => {
-    if (user) {
-      loadProfile();
-    } else {
-      setProfile(null);
-    }
+    if (user) loadProfile();
+    else setProfile(null);
   }, [user]);
 
   const loadProfile = async () => {
@@ -28,7 +35,7 @@ const Header: React.FC = () => {
       const data = await profileApi.getProfile(user.id);
       setProfile(data);
     } catch (error) {
-      console.error('Failed to load profile:', error);
+      console.error("Failed to load profile:", error);
     }
   };
 
@@ -36,29 +43,33 @@ const Header: React.FC = () => {
     try {
       await logout();
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error("Logout failed:", error);
     }
   };
 
   const navItems = [
-    { name: 'Home', path: '/', icon: Home },
-    { name: 'Properties', path: '/properties', icon: Building2 },
-    { name: 'Mess Facilities', path: '/mess', icon: UtensilsCrossed },
-    { name: 'About Us', path: '/about', icon: Info },
-    { name: 'Blog', path: '/blog', icon: BookOpen },
+    { name: "Home", path: "/", icon: Home },
+    { name: "Properties", path: "/properties", icon: Building2 },
+    { name: "Mess Facilities", path: "/mess", icon: UtensilsCrossed },
+    { name: "About Us", path: "/about", icon: Info },
+    { name: "Blog", path: "/blog", icon: BookOpen },
   ];
 
   return (
     <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+          {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-2 transition-smooth hover:opacity-80">
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80">
               <Building2 className="h-8 w-8 text-secondary" />
-              <span className="text-xl xl:text-2xl font-bold">Roomsaathi</span>
+              <span className="text-xl xl:text-2xl font-bold">
+                Roomsaathi
+              </span>
             </Link>
           </div>
 
+          {/* Desktop Menu */}
           <div className="hidden xl:flex items-center gap-6">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -66,7 +77,7 @@ const Header: React.FC = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-smooth ${
+                  className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md ${
                     location.pathname === item.path
                       ? "bg-secondary text-secondary-foreground"
                       : "hover:bg-primary-light"
@@ -78,13 +89,27 @@ const Header: React.FC = () => {
               );
             })}
 
+            {/* List Your Property */}
+            <a
+              href="https://rosamanage.netlify.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-secondary text-secondary-foreground hover:opacity-90"
+            >
+              <PlusCircle className="h-4 w-4" />
+              List Your Property
+              <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-primary-foreground text-primary font-semibold">
+                For Owners
+              </span>
+            </a>
+
             {user ? (
               <>
-                {profile?.role === 'admin' && (
+                {profile?.role === "admin" && (
                   <Link
                     to="/admin"
-                    className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-smooth ${
-                      location.pathname === '/admin'
+                    className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md ${
+                      location.pathname === "/admin"
                         ? "bg-secondary text-secondary-foreground"
                         : "hover:bg-primary-light"
                     }`}
@@ -93,10 +118,11 @@ const Header: React.FC = () => {
                     Admin
                   </Link>
                 )}
+
                 <Link
                   to="/dashboard"
-                  className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-smooth ${
-                    location.pathname === '/dashboard'
+                  className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md ${
+                    location.pathname === "/dashboard"
                       ? "bg-secondary text-secondary-foreground"
                       : "hover:bg-primary-light"
                   }`}
@@ -104,6 +130,7 @@ const Header: React.FC = () => {
                   <User className="h-4 w-4" />
                   Dashboard
                 </Link>
+
                 <Button
                   onClick={handleLogout}
                   variant="secondary"
@@ -123,16 +150,18 @@ const Header: React.FC = () => {
             )}
           </div>
 
+          {/* Mobile Toggle */}
           <div className="xl:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-md hover:bg-primary-light transition-smooth"
+              className="p-2 rounded-md hover:bg-primary-light"
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? <X /> : <Menu />}
             </button>
           </div>
         </div>
 
+        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="xl:hidden pb-4 space-y-2">
             {navItems.map((item) => {
@@ -142,11 +171,7 @@ const Header: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-smooth ${
-                    location.pathname === item.path
-                      ? "bg-secondary text-secondary-foreground"
-                      : "hover:bg-primary-light"
-                  }`}
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md hover:bg-primary-light"
                 >
                   <Icon className="h-4 w-4" />
                   {item.name}
@@ -154,40 +179,38 @@ const Header: React.FC = () => {
               );
             })}
 
+            {/* Mobile List Property */}
+            <a
+              href="https://rosamanage.netlify.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMenuOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-secondary text-secondary-foreground"
+            >
+              <PlusCircle className="h-4 w-4" />
+              List Your Property
+              <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary-foreground text-primary font-semibold">
+                For Owners
+              </span>
+            </a>
+
             {user ? (
               <>
-                {profile?.role === 'admin' && (
-                  <Link
-                    to="/admin"
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-smooth ${
-                      location.pathname === '/admin'
-                        ? "bg-secondary text-secondary-foreground"
-                        : "hover:bg-primary-light"
-                    }`}
-                  >
-                    <Shield className="h-4 w-4" />
-                    Admin
-                  </Link>
-                )}
                 <Link
                   to="/dashboard"
                   onClick={() => setIsMenuOpen(false)}
-                  className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-smooth ${
-                    location.pathname === '/dashboard'
-                      ? "bg-secondary text-secondary-foreground"
-                      : "hover:bg-primary-light"
-                  }`}
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md hover:bg-primary-light"
                 >
                   <User className="h-4 w-4" />
                   Dashboard
                 </Link>
+
                 <button
                   onClick={() => {
                     handleLogout();
                     setIsMenuOpen(false);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md hover:bg-primary-light transition-smooth"
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md hover:bg-primary-light"
                 >
                   <LogOut className="h-4 w-4" />
                   Logout
