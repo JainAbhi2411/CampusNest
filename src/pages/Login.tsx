@@ -100,7 +100,12 @@ const Login: React.FC = () => {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <Building2 className="h-10 w-10 text-primary" />
+              <img
+                src="/images/logo/mainlogo.png"
+                alt="Roomsaathi Logo"
+                loading="eager"
+                className="h-8 w-8 xl:h-9 xl:w-9 object-contain drop-shadow-sm"
+              />
               <h1 className="text-3xl font-bold text-primary">Roomsaathi</h1>
             </div>
             <p className="text-muted-foreground">Find your perfect student accommodation</p>
