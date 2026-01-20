@@ -11,7 +11,12 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <Building2 className="h-6 w-6 text-secondary" />
+              <img
+                src="/images/logo/mainlogo.png"
+                alt="Roomsaathi Logo"
+                loading="eager"
+                className="h-8 w-8 xl:h-9 xl:w-9 object-contain drop-shadow-sm"
+              />
               <h3 className="text-lg font-semibold">Roomsaathi</h3>
             </div>
             <p className="text-primary-foreground/80 mb-4">
