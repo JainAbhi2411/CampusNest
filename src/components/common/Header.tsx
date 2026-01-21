@@ -24,6 +24,7 @@ const Header: React.FC = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const location = useLocation();
   const { user, logout } = useAuth();
+  const navigation = routes.filter((route) => route.visible !== false);
 
   useEffect(() => {
     if (user) loadProfile();
@@ -145,9 +146,9 @@ const Header: React.FC = () => {
           <div className="xl:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-md hover:bg-primary-light"
+              className="p-2 rounded-md hover:bg-primary-light transition-smooth"
             >
-              {isMenuOpen ? <X /> : <Menu />}
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
@@ -170,23 +171,22 @@ const Header: React.FC = () => {
               );
             })}
 
-            {/* Mobile List Property */}
-            <a
-              href="https://rosamanage.netlify.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setIsMenuOpen(false)}
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-secondary text-secondary-foreground"
-            >
-              <PlusCircle className="h-4 w-4" />
-              List Your Property
-              <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary-foreground text-primary font-semibold">
-                For Owners
-              </span>
-            </a>
-
             {user ? (
               <>
+                {profile?.role === 'admin' && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-smooth ${
+                      location.pathname === '/admin'
+                        ? "bg-secondary text-secondary-foreground"
+                        : "hover:bg-primary-light"
+                    }`}
+                  >
+                    <Shield className="h-4 w-4" />
+                    Admin
+                  </Link>
+                )}
                 <Link
                   to="/dashboard"
                   onClick={() => setIsMenuOpen(false)}
