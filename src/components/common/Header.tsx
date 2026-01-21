@@ -94,21 +94,6 @@ const Header: React.FC = () => {
                 </Link>
               );
             })}
-
-            {/* List Your Property */}
-            <a
-              href="https://rosamanage.netlify.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-secondary text-secondary-foreground hover:opacity-90"
-            >
-              <PlusCircle className="h-4 w-4" />
-              List Your Property
-              <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-primary-foreground text-primary font-semibold">
-                For Owners
-              </span>
-            </a>
-
             {user ? (
               <>
                 {profile?.role === "admin" && (
