@@ -6,7 +6,7 @@ import EnhancedSearchBar from '@/components/property/EnhancedSearchBar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Building2, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
+import { Building2, ChevronLeft, ChevronRight, RefreshCw, Filter, X } from 'lucide-react';
 import { propertyApi } from '@/db/api';
 import { supabase } from '@/db/supabase';
 import type { Property, SearchFilters } from '@/types/types';
@@ -20,6 +20,7 @@ const Properties: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<SearchFilters>({});
+  const [showFilters, setShowFilters] = useState(false);
   const { toast } = useToast();
   const pageSize = 12;
 
@@ -174,17 +175,39 @@ const Properties: React.FC = () => {
       />
 
       <div className="min-h-screen bg-muted/30">
-        <div className="bg-primary text-primary-foreground py-12">
+        <div className="bg-primary text-primary-foreground py-8 xl:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl xl:text-4xl font-bold mb-6">Browse Properties</h1>
+            <h1 className="text-2xl xl:text-4xl font-bold mb-4 xl:mb-6">Browse Properties</h1>
             <EnhancedSearchBar showQuickFilters={false} />
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-            <div className="xl:col-span-1">
-              <div className="sticky top-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 xl:py-8">
+          {/* Filter Toggle Button - Mobile & Tablet */}
+          <div className="mb-4 xl:hidden">
+            <Button
+              onClick={() => setShowFilters(!showFilters)}
+              variant={showFilters ? "default" : "outline"}
+              className="w-full h-10 text-sm"
+            >
+              {showFilters ? (
+                <>
+                  <X className="h-4 w-4 mr-2" />
+                  Hide Filters
+                </>
+              ) : (
+                <>
+                  <Filter className="h-4 w-4 mr-2" />
+                  Show Advanced Filters
+                </>
+              )}
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 xl:gap-6">
+            {/* Advanced Filter Panel - Collapsible on Mobile */}
+            <div className={`xl:col-span-1 ${showFilters ? 'block' : 'hidden xl:block'}`}>
+              <div className="xl:sticky xl:top-20">
                 <AdvancedFilterPanel
                   filters={filters}
                   onFilterChange={handleFilterChange}
