@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { profileApi } from "@/db/api";
 import type { Profile } from "@/types/types";
+import routes from "../../routes";
 
 
 const Header: React.FC = () => {
