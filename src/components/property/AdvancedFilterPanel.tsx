@@ -19,7 +19,7 @@ interface AdvancedFilterPanelProps {
 
 const POPULAR_CITIES = [
   'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai',
-  'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow' , 'Kota','Jaipur'
+  'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow'
 ];
 
 const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFilterChange, onReset }) => {
@@ -83,33 +83,34 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
 
   return (
     <Card className="shadow-card">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Filter className="h-5 w-5" />
+      <CardHeader className="p-4 xl:p-6">
+        <CardTitle className="flex items-center gap-2 text-base xl:text-lg">
+          <Filter className="h-4 w-4 xl:h-5 xl:w-5" />
           Advanced Filters
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4 xl:space-y-6 p-4 xl:p-6">
         {filters.search_query && (
           <div className="space-y-2">
-            <Label>Search Query</Label>
+            <Label className="text-xs xl:text-sm">Search Query</Label>
             <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="text-sm py-1.5 px-3">
+              <Badge variant="secondary" className="text-xs xl:text-sm py-1 xl:py-1.5 px-2 xl:px-3">
                 {filters.search_query}
               </Badge>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onFilterChange({ ...filters, search_query: undefined })}
+                className="h-7 w-7 xl:h-8 xl:w-8 p-0"
               >
-                <X className="h-4 w-4" />
+                <X className="h-3 w-3 xl:h-4 xl:w-4" />
               </Button>
             </div>
           </div>
         )}
 
         <div className="space-y-2">
-          <Label htmlFor="city">City</Label>
+          <Label htmlFor="city" className="text-xs xl:text-sm">City</Label>
           <Select
             value={filters.city || 'all'}
             onValueChange={(value) => {
@@ -124,7 +125,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
             }}
             disabled={!!(filters.latitude && filters.longitude)}
           >
-            <SelectTrigger id="city">
+            <SelectTrigger id="city" className="h-9 xl:h-10 text-xs xl:text-sm">
               <SelectValue placeholder="Select City" />
             </SelectTrigger>
             <SelectContent>
@@ -142,7 +143,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
         </div>
 
         <div className="space-y-2">
-          <Label className="flex items-center justify-between">
+          <Label className="flex items-center justify-between text-xs xl:text-sm">
             <span>Current Location</span>
             {filters.latitude && filters.longitude && (
               <Badge variant="secondary" className="text-xs">
@@ -156,21 +157,26 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
               onClick={handleGetCurrentLocation}
               disabled={isLoadingLocation}
               variant="outline"
-              className="flex-1"
+              className="flex-1 h-9 xl:h-10 text-xs xl:text-sm"
               size="sm"
             >
-              <Navigation className="h-4 w-4 mr-2" />
+              <Navigation className="h-3 w-3 xl:h-4 xl:w-4 mr-1 xl:mr-2" />
               {isLoadingLocation ? 'Detecting...' : 'Use My Location'}
             </Button>
             {filters.latitude && filters.longitude && (
-              <Button onClick={handleClearLocation} variant="ghost" size="sm">
-                <X className="h-4 w-4" />
+              <Button 
+                onClick={handleClearLocation} 
+                variant="ghost" 
+                size="sm"
+                className="h-9 xl:h-10 w-9 xl:w-10 p-0"
+              >
+                <X className="h-3 w-3 xl:h-4 xl:w-4" />
               </Button>
             )}
           </div>
           {filters.latitude && filters.longitude && (
             <div className="space-y-2 pt-2">
-              <Label htmlFor="distance">Within {filters.max_distance || 10} km</Label>
+              <Label htmlFor="distance" className="text-xs xl:text-sm">Within {filters.max_distance || 10} km</Label>
               <Slider
                 id="distance"
                 min={1}
@@ -184,12 +190,12 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="accommodation-type">Accommodation Type</Label>
+          <Label htmlFor="accommodation-type" className="text-xs xl:text-sm">Accommodation Type</Label>
           <Select
             value={filters.accommodation_type || 'all'}
             onValueChange={(value) => onFilterChange({ ...filters, accommodation_type: value === 'all' ? undefined : (value as AccommodationType) })}
           >
-            <SelectTrigger id="accommodation-type">
+            <SelectTrigger id="accommodation-type" className="h-9 xl:h-10 text-xs xl:text-sm">
               <SelectValue placeholder="All Types" />
             </SelectTrigger>
             <SelectContent>
@@ -203,12 +209,12 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="gender">Gender Preference</Label>
+          <Label htmlFor="gender" className="text-xs xl:text-sm">Gender Preference</Label>
           <Select
             value={filters.gender_preference || 'all'}
             onValueChange={(value) => onFilterChange({ ...filters, gender_preference: value === 'all' ? undefined : (value as GenderPreference) })}
           >
-            <SelectTrigger id="gender">
+            <SelectTrigger id="gender" className="h-9 xl:h-10 text-xs xl:text-sm">
               <SelectValue placeholder="Any" />
             </SelectTrigger>
             <SelectContent>
@@ -221,12 +227,12 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="occupancy">Occupancy Type</Label>
+          <Label htmlFor="occupancy" className="text-xs xl:text-sm">Occupancy Type</Label>
           <Select
             value={filters.occupancy_type || 'all'}
             onValueChange={(value) => onFilterChange({ ...filters, occupancy_type: value === 'all' ? undefined : (value as OccupancyType) })}
           >
-            <SelectTrigger id="occupancy">
+            <SelectTrigger id="occupancy" className="h-9 xl:h-10 text-xs xl:text-sm">
               <SelectValue placeholder="Any" />
             </SelectTrigger>
             <SelectContent>
@@ -239,8 +245,8 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
           </Select>
         </div>
 
-        <div className="space-y-3">
-          <Label>Price Range: ₹{priceRange[0].toLocaleString()} - ₹{priceRange[1].toLocaleString()}</Label>
+        <div className="space-y-2 xl:space-y-3">
+          <Label className="text-xs xl:text-sm">Price Range: ₹{priceRange[0].toLocaleString()} - ₹{priceRange[1].toLocaleString()}</Label>
           <Slider
             min={0}
             max={50000}
@@ -253,15 +259,15 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
         </div>
 
         <div className="space-y-2">
-          <Label className="flex items-center gap-2">
-            <Star className="h-4 w-4 text-secondary" />
+          <Label className="flex items-center gap-2 text-xs xl:text-sm">
+            <Star className="h-3 w-3 xl:h-4 xl:w-4 text-secondary" />
             Minimum Rating
           </Label>
           <Select
             value={filters.min_rating?.toString() || 'all'}
             onValueChange={(value) => onFilterChange({ ...filters, min_rating: value === 'all' ? undefined : Number(value) })}
           >
-            <SelectTrigger>
+            <SelectTrigger className="h-9 xl:h-10 text-xs xl:text-sm">
               <SelectValue placeholder="Any Rating" />
             </SelectTrigger>
             <SelectContent>
@@ -273,11 +279,11 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
           </Select>
         </div>
 
-        <div className="space-y-3 pt-2 border-t">
-          <Label>Amenities</Label>
+        <div className="space-y-2 xl:space-y-3 pt-2 border-t">
+          <Label className="text-xs xl:text-sm">Amenities</Label>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="food" className="font-normal">Food Included</Label>
+              <Label htmlFor="food" className="font-normal text-xs xl:text-sm">Food Included</Label>
               <Switch
                 id="food"
                 checked={filters.food_included || false}
@@ -285,7 +291,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
               />
             </div>
             <div className="flex items-center justify-between">
-              <Label htmlFor="wifi" className="font-normal">WiFi Available</Label>
+              <Label htmlFor="wifi" className="font-normal text-xs xl:text-sm">WiFi Available</Label>
               <Switch
                 id="wifi"
                 checked={filters.wifi_available || false}
@@ -293,7 +299,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
               />
             </div>
             <div className="flex items-center justify-between">
-              <Label htmlFor="ac" className="font-normal">AC Available</Label>
+              <Label htmlFor="ac" className="font-normal text-xs xl:text-sm">AC Available</Label>
               <Switch
                 id="ac"
                 checked={filters.ac_available || false}
@@ -301,7 +307,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
               />
             </div>
             <div className="flex items-center justify-between">
-              <Label htmlFor="parking" className="font-normal">Parking Available</Label>
+              <Label htmlFor="parking" className="font-normal text-xs xl:text-sm">Parking Available</Label>
               <Switch
                 id="parking"
                 checked={filters.parking_available || false}
@@ -312,12 +318,12 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="sort">Sort By</Label>
+          <Label htmlFor="sort" className="text-xs xl:text-sm">Sort By</Label>
           <Select
             value={filters.sort_by || 'newest'}
             onValueChange={(value) => onFilterChange({ ...filters, sort_by: value as SortOption })}
           >
-            <SelectTrigger id="sort">
+            <SelectTrigger id="sort" className="h-9 xl:h-10 text-xs xl:text-sm">
               <SelectValue placeholder="Sort By" />
             </SelectTrigger>
             <SelectContent>
@@ -330,12 +336,12 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="availability">Availability</Label>
+          <Label htmlFor="availability" className="text-xs xl:text-sm">Availability</Label>
           <Select
             value={filters.available === undefined ? 'all' : filters.available ? 'available' : 'occupied'}
             onValueChange={(value) => onFilterChange({ ...filters, available: value === 'all' ? undefined : value === 'available' })}
           >
-            <SelectTrigger id="availability">
+            <SelectTrigger id="availability" className="h-9 xl:h-10 text-xs xl:text-sm">
               <SelectValue placeholder="All" />
             </SelectTrigger>
             <SelectContent>
@@ -346,8 +352,8 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
           </Select>
         </div>
 
-        <Button onClick={onReset} variant="outline" className="w-full">
-          <X className="h-4 w-4 mr-2" />
+        <Button onClick={onReset} variant="outline" className="w-full h-9 xl:h-10 text-xs xl:text-sm">
+          <X className="h-3 w-3 xl:h-4 xl:w-4 mr-2" />
           Reset All Filters
         </Button>
       </CardContent>
