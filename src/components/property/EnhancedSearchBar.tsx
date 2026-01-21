@@ -149,18 +149,18 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
   const hasActiveFilters = query || (selectedCity && selectedCity !== 'all') || (selectedType && selectedType !== 'all') || (selectedPriceRange && selectedPriceRange !== 'all') || hasLocation;
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      <Card className="p-4 shadow-lg">
-        <form onSubmit={handleSearch} className="space-y-4">
-          <div className="flex flex-col xl:flex-row gap-3">
+    <div className={`space-y-3 xl:space-y-4 ${className}`}>
+      <Card className="p-3 xl:p-4 shadow-lg">
+        <form onSubmit={handleSearch} className="space-y-3 xl:space-y-4">
+          <div className="flex flex-col xl:flex-row gap-2 xl:gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Search className="absolute left-2 xl:left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 xl:h-5 xl:w-5 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search by location, property name, or area..."
+                placeholder="Search location, property..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="pl-10 h-12"
+                className="pl-8 xl:pl-10 h-10 xl:h-12 text-sm xl:text-base"
               />
             </div>
 
@@ -170,11 +170,12 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
                   type="button"
                   onClick={handleClearLocation}
                   variant="secondary"
-                  className="h-12 px-4"
+                  className="h-10 xl:h-12 px-3 xl:px-4 text-xs xl:text-sm flex-1 xl:flex-none"
                 >
-                  <MapPin className="h-4 w-4 mr-2" />
-                  Using Location
-                  <X className="h-4 w-4 ml-2" />
+                  <MapPin className="h-3 w-3 xl:h-4 xl:w-4 mr-1 xl:mr-2" />
+                  <span className="hidden xl:inline">Using Location</span>
+                  <span className="xl:hidden">Location</span>
+                  <X className="h-3 w-3 xl:h-4 xl:w-4 ml-1 xl:ml-2" />
                 </Button>
               ) : (
                 <Button
@@ -182,25 +183,25 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
                   onClick={handleGetCurrentLocation}
                   disabled={isLoadingLocation}
                   variant="outline"
-                  className="h-12 px-4"
+                  className="h-10 xl:h-12 px-3 xl:px-4 text-xs xl:text-sm flex-1 xl:flex-none"
                 >
-                  <Navigation className="h-4 w-4 mr-2" />
+                  <Navigation className="h-3 w-3 xl:h-4 xl:w-4 mr-1 xl:mr-2" />
                   {isLoadingLocation ? 'Detecting...' : 'Near Me'}
                 </Button>
               )}
 
-              <Button type="submit" className="h-12 px-6">
-                <Search className="h-4 w-4 mr-2" />
+              <Button type="submit" className="h-10 xl:h-12 px-4 xl:px-6 text-xs xl:text-sm flex-1 xl:flex-none">
+                <Search className="h-3 w-3 xl:h-4 xl:w-4 mr-1 xl:mr-2" />
                 Search
               </Button>
             </div>
           </div>
 
           {showQuickFilters && (
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-3">
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
+            <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 xl:gap-3">
+              <div className="space-y-1 xl:space-y-2">
+                <label className="text-xs xl:text-sm font-medium flex items-center gap-1 xl:gap-2">
+                  <MapPin className="h-3 w-3 xl:h-4 xl:w-4" />
                   City
                 </label>
                 <Select
@@ -208,7 +209,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
                   onValueChange={setSelectedCity}
                   disabled={hasLocation}
                 >
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-9 xl:h-10 text-xs xl:text-sm">
                     <SelectValue placeholder="Select City" />
                   </SelectTrigger>
                   <SelectContent>
@@ -222,13 +223,13 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <Home className="h-4 w-4" />
+              <div className="space-y-1 xl:space-y-2">
+                <label className="text-xs xl:text-sm font-medium flex items-center gap-1 xl:gap-2">
+                  <Home className="h-3 w-3 xl:h-4 xl:w-4" />
                   Type
                 </label>
                 <Select value={selectedType} onValueChange={setSelectedType}>
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-9 xl:h-10 text-xs xl:text-sm">
                     <SelectValue placeholder="All Types" />
                   </SelectTrigger>
                   <SelectContent>
@@ -241,13 +242,13 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <IndianRupee className="h-4 w-4" />
+              <div className="space-y-1 xl:space-y-2 col-span-2 xl:col-span-1">
+                <label className="text-xs xl:text-sm font-medium flex items-center gap-1 xl:gap-2">
+                  <IndianRupee className="h-3 w-3 xl:h-4 xl:w-4" />
                   Price Range
                 </label>
                 <Select value={selectedPriceRange} onValueChange={setSelectedPriceRange}>
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-9 xl:h-10 text-xs xl:text-sm">
                     <SelectValue placeholder="Any Price" />
                   </SelectTrigger>
                   <SelectContent>
@@ -261,90 +262,77 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <Filter className="h-4 w-4" />
-                  Actions
-                </label>
-                <div className="flex gap-2">
-                  {hasActiveFilters && (
-                    <Button
-                      type="button"
-                      onClick={handleClearFilters}
-                      variant="outline"
-                      className="h-10 flex-1"
-                    >
-                      <X className="h-4 w-4 mr-2" />
-                      Clear
-                    </Button>
-                  )}
+              {hasActiveFilters && (
+                <div className="space-y-1 xl:space-y-2 col-span-2 xl:col-span-1">
+                  <label className="text-xs xl:text-sm font-medium flex items-center gap-1 xl:gap-2 xl:opacity-0">
+                    <Filter className="h-3 w-3 xl:h-4 xl:w-4" />
+                    Actions
+                  </label>
                   <Button
                     type="button"
-                    onClick={() => navigate('/properties')}
-                    variant="secondary"
-                    className="h-10 flex-1"
+                    onClick={handleClearFilters}
+                    variant="outline"
+                    className="h-9 xl:h-10 w-full text-xs xl:text-sm"
                   >
-                    <Filter className="h-4 w-4 mr-2" />
-                    More Filters
+                    <X className="h-3 w-3 xl:h-4 xl:w-4 mr-1 xl:mr-2" />
+                    Clear Filters
                   </Button>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </form>
-
-        {hasActiveFilters && (
-          <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t">
-            <span className="text-sm text-muted-foreground">Active Filters:</span>
-            {query && (
-              <Badge variant="secondary" className="gap-1">
-                Search: {query}
-                <X
-                  className="h-3 w-3 cursor-pointer"
-                  onClick={() => setQuery('')}
-                />
-              </Badge>
-            )}
-            {selectedCity && (
-              <Badge variant="secondary" className="gap-1">
-                City: {selectedCity}
-                <X
-                  className="h-3 w-3 cursor-pointer"
-                  onClick={() => setSelectedCity('')}
-                />
-              </Badge>
-            )}
-            {selectedType && (
-              <Badge variant="secondary" className="gap-1">
-                Type: {selectedType.toUpperCase()}
-                <X
-                  className="h-3 w-3 cursor-pointer"
-                  onClick={() => setSelectedType('')}
-                />
-              </Badge>
-            )}
-            {selectedPriceRange && (
-              <Badge variant="secondary" className="gap-1">
-                Price: {PRICE_RANGES.find(r => r.value === selectedPriceRange)?.label}
-                <X
-                  className="h-3 w-3 cursor-pointer"
-                  onClick={() => setSelectedPriceRange('')}
-                />
-              </Badge>
-            )}
-            {hasLocation && (
-              <Badge variant="secondary" className="gap-1">
-                <MapPin className="h-3 w-3" />
-                Using Current Location
-                <X
-                  className="h-3 w-3 cursor-pointer"
-                  onClick={handleClearLocation}
-                />
-              </Badge>
-            )}
-          </div>
-        )}
       </Card>
+
+      {hasActiveFilters && (
+        <div className="flex flex-wrap gap-2">
+          {query && (
+            <Badge variant="secondary" className="text-xs xl:text-sm px-2 xl:px-3 py-1">
+              Search: {query}
+              <X
+                className="h-3 w-3 ml-1 cursor-pointer"
+                onClick={() => setQuery('')}
+              />
+            </Badge>
+          )}
+          {selectedCity && selectedCity !== 'all' && (
+            <Badge variant="secondary" className="text-xs xl:text-sm px-2 xl:px-3 py-1">
+              City: {selectedCity}
+              <X
+                className="h-3 w-3 ml-1 cursor-pointer"
+                onClick={() => setSelectedCity('all')}
+              />
+            </Badge>
+          )}
+          {selectedType && selectedType !== 'all' && (
+            <Badge variant="secondary" className="text-xs xl:text-sm px-2 xl:px-3 py-1">
+              Type: {selectedType.toUpperCase()}
+              <X
+                className="h-3 w-3 ml-1 cursor-pointer"
+                onClick={() => setSelectedType('all')}
+              />
+            </Badge>
+          )}
+          {selectedPriceRange && selectedPriceRange !== 'all' && (
+            <Badge variant="secondary" className="text-xs xl:text-sm px-2 xl:px-3 py-1">
+              Price: {PRICE_RANGES.find((r) => r.value === selectedPriceRange)?.label}
+              <X
+                className="h-3 w-3 ml-1 cursor-pointer"
+                onClick={() => setSelectedPriceRange('all')}
+              />
+            </Badge>
+          )}
+          {hasLocation && (
+            <Badge variant="secondary" className="text-xs xl:text-sm px-2 xl:px-3 py-1">
+              Near Me
+              <X
+                className="h-3 w-3 ml-1 cursor-pointer"
+                onClick={handleClearLocation}
+              />
+            </Badge>
+          )}
+        </div>
+      )}
     </div>
   );
 };
