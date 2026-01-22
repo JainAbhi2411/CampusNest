@@ -279,3 +279,12 @@ export interface ComparisonScore {
   amenities_score: number;
   rating_score: number;
 }
+
+export interface Feedback {
+  id: string;
+  name: string;
+  contact: string;
+  looking_for: string;
+  problems_faced: string | null;
+  created_at: string;
+}
