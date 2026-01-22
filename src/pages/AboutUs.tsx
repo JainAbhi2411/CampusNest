@@ -45,13 +45,13 @@ const AboutUs: React.FC = () => {
     {
       name: 'Abhinav Jain',
       role: 'Co-Founder',
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
+      image: '/images/Abhinav.jpeg',
       bio: 'Expert in property management with 10+ years of experience in student housing.',
     },
     {
       name: 'Karanveer Dandia',
       role: 'Co-founder',
-      image: 'https://drive.google.com/file/d/1nO9YZz6bWZWr_Gr3uQt53yXSRWNZR4BZ/view?usp=drivesdk',
+      image: '/images/karanveer.jpeg',
       bio: 'Tech enthusiast passionate about building solutions that make a real difference.',
     },
     
