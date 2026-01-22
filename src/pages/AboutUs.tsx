@@ -39,7 +39,7 @@ const AboutUs: React.FC = () => {
     {
       name: 'Nikhil Garhwal',
       role: 'Co-Founder',
-      image: '/images/nikhil.jpeg',
+      image: '/images/Nikhil.jpeg',
       bio: 'Former student who experienced accommodation struggles firsthand and decided to solve it for others.',
     },
     {
