@@ -37,29 +37,24 @@ const AboutUs: React.FC = () => {
 
   const team = [
     {
-      name: 'Rajesh Kumar',
-      role: 'Founder & CEO',
+      name: 'Nikhil Garhwal',
+      role: 'Co-Founder',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
       bio: 'Former student who experienced accommodation struggles firsthand and decided to solve it for others.',
     },
     {
-      name: 'Priya Sharma',
-      role: 'Head of Operations',
+      name: 'Abhinav Jain',
+      role: 'Co-Founder',
       image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
       bio: 'Expert in property management with 10+ years of experience in student housing.',
     },
     {
-      name: 'Amit Patel',
-      role: 'Chief Technology Officer',
+      name: 'Karanveer Dandia',
+      role: 'Co-founder',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400',
       bio: 'Tech enthusiast passionate about building solutions that make a real difference.',
     },
-    {
-      name: 'Sneha Reddy',
-      role: 'Head of Customer Success',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400',
-      bio: 'Dedicated to ensuring every student finds their perfect accommodation match.',
-    },
+    
   ];
 
   const milestones = [
