@@ -7,13 +7,24 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { feedbackApi } from '@/db/api';
 import { toast } from 'sonner';
 
-type ChatStep = 'welcome' | 'name' | 'contact' | 'looking_for' | 'problems' | 'thank_you';
+type ChatStep = 'welcome' | 'name' | 'email' | 'phone' | 'looking_for' | 'problems' | 'thank_you';
 
 interface Message {
   text: string;
   isBot: boolean;
   timestamp: Date;
 }
+
+// Validation functions
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const isValidPhone = (phone: string): boolean => {
+  const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
+  return phoneRegex.test(phone);
+};
 
 const ChatBot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +38,8 @@ const ChatBot: React.FC = () => {
   // Form data
   const [formData, setFormData] = useState({
     name: '',
-    contact: '',
+    email: '',
+    phone: '',
     looking_for: '',
     problems_faced: '',
   });
@@ -74,7 +86,7 @@ const ChatBot: React.FC = () => {
   const handleOpen = () => {
     setIsOpen(true);
     if (messages.length === 0) {
-      addBotMessage('👋 Hi there! Welcome to StayNearby! I\'m here to help you find the perfect accommodation. May I ask you a few quick questions?');
+      addBotMessage('👋 Hi there! Welcome to Roomsaathi! I\'m here to help you find the perfect accommodation. May I ask you a few quick questions?');
     }
   };
 
@@ -85,9 +97,11 @@ const ChatBot: React.FC = () => {
   const handleNextStep = async () => {
     if (!inputValue.trim() && currentStep !== 'welcome') return;
 
+    const trimmedInput = inputValue.trim();
+
     // Add user message
     if (currentStep !== 'welcome') {
-      addUserMessage(inputValue);
+      addUserMessage(trimmedInput);
     }
 
     // Process based on current step
@@ -98,26 +112,45 @@ const ChatBot: React.FC = () => {
         break;
 
       case 'name':
-        setFormData((prev) => ({ ...prev, name: inputValue }));
-        setCurrentStep('contact');
-        addBotMessage(`Nice to meet you, ${inputValue}! 😊 What\'s the best way to contact you? (Email or Phone)`);
+        if (trimmedInput.length < 2) {
+          addBotMessage('Please enter a valid name (at least 2 characters).');
+          return;
+        }
+        setFormData((prev) => ({ ...prev, name: trimmedInput }));
+        setCurrentStep('email');
+        addBotMessage(`Nice to meet you, ${trimmedInput}! 😊 What\'s your email address?`);
         break;
 
-      case 'contact':
-        setFormData((prev) => ({ ...prev, contact: inputValue }));
+      case 'email':
+        if (!isValidEmail(trimmedInput)) {
+          addBotMessage('Please enter a valid email address (e.g., example@email.com).');
+          return;
+        }
+        setFormData((prev) => ({ ...prev, email: trimmedInput }));
+        setCurrentStep('phone');
+        addBotMessage('Perfect! And what\'s your phone number?');
+        break;
+
+      case 'phone':
+        if (!isValidPhone(trimmedInput)) {
+          addBotMessage('Please enter a valid phone number (at least 10 digits).');
+          return;
+        }
+        setFormData((prev) => ({ ...prev, phone: trimmedInput }));
         setCurrentStep('looking_for');
-        addBotMessage('Perfect! What type of accommodation are you looking for? (PG, Flat, Hostel, or Room)');
+        addBotMessage('Great! What type of accommodation are you looking for? (PG, Flat, Hostel, or Room)');
         break;
 
       case 'looking_for':
-        setFormData((prev) => ({ ...prev, looking_for: inputValue }));
+        setFormData((prev) => ({ ...prev, looking_for: trimmedInput }));
         setCurrentStep('problems');
-        addBotMessage('Got it! Have you faced any challenges or problems while searching for accommodation? Feel free to share your experience.');
+        addBotMessage('Got it! Have you faced any challenges or problems while searching for accommodation? Feel free to share your experience, or type "none" if you haven\'t faced any issues.');
         break;
 
       case 'problems':
-        setFormData((prev) => ({ ...prev, problems_faced: inputValue }));
-        await submitFeedback(inputValue);
+        const problemsText = trimmedInput.toLowerCase() === 'none' ? '' : trimmedInput;
+        setFormData((prev) => ({ ...prev, problems_faced: problemsText }));
+        await submitFeedback(problemsText);
         break;
 
       default:
@@ -129,15 +162,17 @@ const ChatBot: React.FC = () => {
 
   const submitFeedback = async (problemsFaced: string) => {
     try {
+      const contactInfo = `Email: ${formData.email}, Phone: ${formData.phone}`;
+      
       await feedbackApi.submitFeedback({
         name: formData.name,
-        contact: formData.contact,
+        contact: contactInfo,
         looking_for: formData.looking_for,
         problems_faced: problemsFaced || null,
       });
 
       setCurrentStep('thank_you');
-      addBotMessage(`Thank you so much for your valuable feedback, ${formData.name}! 🙏 Your insights will help us improve our platform. We'll reach out to you soon at ${formData.contact}. Happy house hunting! 🏠`);
+      addBotMessage(`Thank you so much for your valuable feedback, ${formData.name}! 🙏 Your insights will help us improve our platform. We'll reach out to you soon at ${formData.email}. Happy house hunting! 🏠`);
       
       // Mark survey as completed
       localStorage.setItem('chatbot_survey_completed', 'true');
@@ -148,6 +183,7 @@ const ChatBot: React.FC = () => {
       }, 5000);
     } catch (error) {
       console.error('Error submitting feedback:', error);
+      addBotMessage('Oops! There was an error submitting your feedback. Please try again or contact us directly.');
       toast.error('Failed to submit feedback. Please try again.');
     }
   };
@@ -176,7 +212,7 @@ const ChatBot: React.FC = () => {
       {isOpen && (
         <Card className="fixed bottom-6 right-6 w-96 max-w-[calc(100vw-3rem)] h-[500px] shadow-2xl z-50 flex flex-col">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b bg-primary text-primary-foreground rounded-t-lg">
-            <CardTitle className="text-lg font-semibold">StayNearby Assistant</CardTitle>
+            <CardTitle className="text-lg font-semibold">Roomsaathi Assistant</CardTitle>
             <Button
               variant="ghost"
               size="icon"
@@ -233,19 +269,19 @@ const ChatBot: React.FC = () => {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyPress}
-                    placeholder="Share your experience (optional)..."
+                    placeholder="Share your experience (or type 'none')..."
                     className="min-h-[80px] resize-none"
                   />
                   <div className="flex gap-2">
                     <Button
                       onClick={() => {
-                        setInputValue('No problems so far');
+                        setInputValue('none');
                         setTimeout(() => handleNextStep(), 100);
                       }}
                       variant="outline"
                       className="flex-1"
                     >
-                      Skip
+                      No Issues
                     </Button>
                     <Button onClick={handleNextStep} className="flex-1">
                       <Send className="h-4 w-4 mr-2" />
@@ -259,7 +295,18 @@ const ChatBot: React.FC = () => {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyPress}
-                    placeholder="Type your answer..."
+                    placeholder={
+                      currentStep === 'name' ? 'Enter your name...' :
+                      currentStep === 'email' ? 'Enter your email...' :
+                      currentStep === 'phone' ? 'Enter your phone number...' :
+                      currentStep === 'looking_for' ? 'PG, Flat, Hostel, or Room...' :
+                      'Type your answer...'
+                    }
+                    type={
+                      currentStep === 'email' ? 'email' :
+                      currentStep === 'phone' ? 'tel' :
+                      'text'
+                    }
                     className="flex-1"
                   />
                   <Button onClick={handleNextStep} size="icon" disabled={!inputValue.trim()}>
