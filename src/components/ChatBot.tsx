@@ -26,6 +26,14 @@ const isValidPhone = (phone: string): boolean => {
   return phoneRegex.test(phone);
 };
 
+const playSound = (src: string) => {
+  const audio = new Audio(src);
+  audio.volume = 0.6; // adjust volume
+  audio.play().catch(() => {
+    // ignore autoplay restrictions
+  });
+};
+
 const ChatBot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState<ChatStep>('welcome');
@@ -34,6 +42,10 @@ const ChatBot: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [hasAutoOpened, setHasAutoOpened] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const openSound = useRef<HTMLAudioElement | null>(null);
+ const closeSound = useRef<HTMLAudioElement | null>(null);
+ const botSound = useRef<HTMLAudioElement | null>(null);
+ const userSound = useRef<HTMLAudioElement | null>(null);
 
   // Form data
   const [formData, setFormData] = useState({
@@ -43,6 +55,18 @@ const ChatBot: React.FC = () => {
     looking_for: '',
     problems_faced: '',
   });
+
+  useEffect(() => {
+  openSound.current = new Audio('live-chat-353605.mp3');
+  closeSound.current = new Audio('message-incoming-02-199577.mp3');
+  botSound.current = new Audio('live-chat-353605.mp3');
+  userSound.current = new Audio('message-incoming-02-199577.mp3');
+
+  openSound.current.volume = 0.6;
+  closeSound.current.volume = 0.6;
+  botSound.current.volume = 0.5;
+  userSound.current.volume = 0.5;
+}, []);
 
   // Check if user has already completed the survey
   useEffect(() => {
@@ -75,16 +99,20 @@ const ChatBot: React.FC = () => {
     setIsTyping(true);
     setTimeout(() => {
       setMessages((prev) => [...prev, { text, isBot: true, timestamp: new Date() }]);
+
+      botSound.current?.play();
       setIsTyping(false);
     }, 500);
   };
 
   const addUserMessage = (text: string) => {
     setMessages((prev) => [...prev, { text, isBot: false, timestamp: new Date() }]);
+    userSound.current?.play();
   };
 
   const handleOpen = () => {
     setIsOpen(true);
+    openSound.current?.play();
     if (messages.length === 0) {
       addBotMessage('👋 Hi there! Welcome to Roomsaathi! I\'m here to help you find the perfect accommodation. May I ask you a few quick questions?');
     }
@@ -92,6 +120,7 @@ const ChatBot: React.FC = () => {
 
   const handleClose = () => {
     setIsOpen(false);
+    closeSound.current?.play();
   };
 
   const handleNextStep = async () => {
