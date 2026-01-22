@@ -51,7 +51,7 @@ const AboutUs: React.FC = () => {
     {
       name: 'Karanveer Dandia',
       role: 'Co-founder',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400',
+      image: 'https://drive.google.com/file/d/1nO9YZz6bWZWr_Gr3uQt53yXSRWNZR4BZ/view?usp=drivesdk',
       bio: 'Tech enthusiast passionate about building solutions that make a real difference.',
     },
     
