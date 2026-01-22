@@ -8,6 +8,7 @@ import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import ComparisonBar from '@/components/comparison/ComparisonBar';
+import ChatBot from '@/components/ChatBot';
 import routes from './routes';
 
 const AppContent: React.FC = () => {
@@ -35,6 +36,7 @@ const AppContent: React.FC = () => {
       </main>
       {!isAdminRoute && <Footer />}
       {!isAdminRoute && !isCompareRoute && <ComparisonBar />}
+      {!isAdminRoute && <ChatBot />}
     </div>
   );
 };
@@ -43,8 +45,8 @@ const App: React.FC = () => {
   return (
     <Router>
       <AuthProvider client={supabase}>
+        <Toaster position="top-center" richColors />
         <ComparisonProvider>
-          <Toaster position="top-center" richColors />
           <RequireAuth whiteList={["/", "/login", "/properties", "/property/:id", "/compare", "/mess", "/mess/:id", "/about", "/blog", "/blog/:slug", "/terms"]}>
             <AppContent />
           </RequireAuth>
