@@ -19,6 +19,7 @@ import type {
   PropertyView,
   PropertyComparison,
   ComparisonScore,
+  Feedback,
 } from '@/types/types';
 
 // Profile API
@@ -1461,6 +1462,36 @@ export const blogApi = {
     });
 
     return counts;
+  },
+};
+
+// Feedback API
+export const feedbackApi = {
+  async submitFeedback(feedback: Omit<Feedback, 'id' | 'created_at'>): Promise<Feedback> {
+    const { data, error } = await supabase
+      .from('feedback')
+      .insert({
+        name: feedback.name,
+        contact: feedback.contact,
+        looking_for: feedback.looking_for,
+        problems_faced: feedback.problems_faced || null,
+      })
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Failed to submit feedback');
+    return data;
+  },
+
+  async getAllFeedback(): Promise<Feedback[]> {
+    const { data, error } = await supabase
+      .from('feedback')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
   },
 };
 
