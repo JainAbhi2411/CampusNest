@@ -3,70 +3,124 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
-All colors MUST be HSL.
-*/
+/* =========================================================
+   Roomsaathi Design System
+   Brand-aligned with logo (Teal + Yellow)
+   All colors are HSL
+   ========================================================= */
 
 @layer base {
   :root {
+    /* Radius */
     --radius: 0.5rem;
+
+    /* =========================
+       Base Colors
+       ========================= */
     --background: 0 0% 100%;
     --foreground: 210 29% 24%;
+
     --card: 0 0% 100%;
     --card-foreground: 210 29% 24%;
+
     --popover: 0 0% 100%;
     --popover-foreground: 210 29% 24%;
-    --primary: 210 29% 24%;
+
+    /* =========================
+       Brand Colors (LOGO MATCH)
+       ========================= */
+
+    /* Teal (Logo Text) */
+    --primary: 188 90% 38%;
+    --primary-light: 188 90% 48%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 210 29% 35%;
-    --secondary: 28 80% 52%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 28 80% 52%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
+
+    /* Yellow (Logo Icon / People) */
+    --secondary: 45 90% 55%;
+    --secondary-foreground: 210 29% 24%;
+
+    --accent: 45 90% 55%;
+    --accent-foreground: 210 29% 24%;
+
+    /* =========================
+       UI Utility Colors
+       ========================= */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 188 90% 38%;
+
+    /* =========================
+       Status
+       ========================= */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 210 29% 24%;
-    --chart-1: 28 80% 52%;
-    --chart-2: 210 29% 24%;
+
+    /* =========================
+       Charts
+       ========================= */
+    --chart-1: 45 90% 55%;   /* yellow */
+    --chart-2: 188 90% 38%;  /* teal */
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+
+    /* =========================
+       Shadows
+       ========================= */
     --shadow-card: 0 0% 0% / 0.1;
   }
 
+  /* =========================================================
+     Dark Mode
+     ========================================================= */
+
   .dark {
-    --background: 210 29% 24%;
+    --background: 210 29% 18%;
     --foreground: 0 0% 100%;
-    --card: 210 29% 29%;
+
+    --card: 210 29% 22%;
     --card-foreground: 0 0% 100%;
-    --popover: 210 29% 29%;
+
+    --popover: 210 29% 22%;
     --popover-foreground: 0 0% 100%;
-    --primary: 28 80% 52%;
+
+    /* Brand */
+    --primary: 188 90% 45%;
+    --primary-light: 188 90% 55%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 28 80% 62%;
-    --secondary: 210 29% 35%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 210 29% 35%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 28 80% 52%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
+
+    --secondary: 45 90% 60%;
+    --secondary-foreground: 210 29% 18%;
+
+    --accent: 45 90% 60%;
+    --accent-foreground: 210 29% 18%;
+
+    /* UI */
+    --muted: 210 29% 28%;
+    --muted-foreground: 215 20% 65%;
+
+    --border: 210 29% 30%;
+    --input: 210 29% 30%;
+    --ring: 45 90% 55%;
+
+    /* Status */
+    --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 100%;
-    --border: 210 29% 35%;
-    --input: 210 29% 35%;
-    --ring: 28 80% 52%;
-    --chart-1: 28 80% 52%;
-    --chart-2: 210 29% 50%;
+
+    /* Charts */
+    --chart-1: 45 90% 60%;
+    --chart-2: 188 90% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
     --shadow-card: 0 0% 0% / 0.3;
   }
 }
+
 
 @layer base {
   * {
