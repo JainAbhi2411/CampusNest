@@ -80,74 +80,92 @@ export const propertyApi = {
       return this.getPropertiesByLocation(filters, page, pageSize);
     }
 
-    // Use advanced search function with natural language parsing
-    const { data, error } = await supabase.rpc('search_properties_advanced', {
-      search_term: filters?.search_query?.trim() || null,
-      filter_city: filters?.city || null,
-      filter_accommodation_type: filters?.accommodation_type || null,
-      filter_min_price: filters?.min_price ?? null,
-      filter_max_price: filters?.max_price ?? null,
-      filter_gender_preference: filters?.gender_preference || null,
-      filter_occupancy_type: filters?.occupancy_type || null,
-      filter_food_included: filters?.food_included ?? null,
-      filter_wifi_available: filters?.wifi_available ?? null,
-      filter_ac_available: filters?.ac_available ?? null,
-      filter_parking_available: filters?.parking_available ?? null,
-      filter_min_rating: filters?.min_rating ?? null,
-      filter_available: filters?.available ?? null,
-    });
+    let query = supabase.from('properties').select('*');
 
-    if (error) throw error;
-    
-    let results = Array.isArray(data) ? data : [];
+    // Text search filter
+    if (filters?.search_query) {
+      const searchTerm = filters.search_query;
+      query = query.or(`title.ilike.%${searchTerm}%,location.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,address.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+    }
 
-    // Apply sorting
+    // Basic filters
+    if (filters?.city) {
+      query = query.eq('city', filters.city);
+    }
+    if (filters?.accommodation_type) {
+      query = query.eq('accommodation_type', filters.accommodation_type);
+    }
+    if (filters?.min_price !== undefined) {
+      query = query.gte('price', filters.min_price);
+    }
+    if (filters?.max_price !== undefined) {
+      query = query.lte('price', filters.max_price);
+    }
+    if (filters?.available !== undefined) {
+      query = query.eq('available', filters.available);
+    }
+
+    // New filters
+    if (filters?.gender_preference) {
+      query = query.eq('gender_preference', filters.gender_preference);
+    }
+    if (filters?.occupancy_type) {
+      query = query.eq('occupancy_type', filters.occupancy_type);
+    }
+    if (filters?.food_included !== undefined) {
+      query = query.eq('food_included', filters.food_included);
+    }
+    if (filters?.wifi_available !== undefined) {
+      query = query.eq('wifi_available', filters.wifi_available);
+    }
+    if (filters?.ac_available !== undefined) {
+      query = query.eq('ac_available', filters.ac_available);
+    }
+    if (filters?.parking_available !== undefined) {
+      query = query.eq('parking_available', filters.parking_available);
+    }
+    if (filters?.min_rating !== undefined) {
+      query = query.gte('average_rating', filters.min_rating);
+    }
+
+    // Sorting
     if (filters?.sort_by) {
       switch (filters.sort_by) {
         case 'price_low':
-          results.sort((a, b) => (a.price || 0) - (b.price || 0));
+          query = query.order('price', { ascending: true });
           break;
         case 'price_high':
-          results.sort((a, b) => (b.price || 0) - (a.price || 0));
+          query = query.order('price', { ascending: false });
           break;
         case 'rating':
-          results.sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0));
+          query = query.order('average_rating', { ascending: false });
           break;
         case 'newest':
         default:
-          results.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+          query = query.order('created_at', { ascending: false });
           break;
       }
     } else {
-      results.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      query = query.order('created_at', { ascending: false });
     }
 
-    // Apply pagination
     const from = (page - 1) * pageSize;
-    const to = from + pageSize;
-    
-    return results.slice(from, to);
+    const to = from + pageSize - 1;
+
+    const { data, error } = await query.range(from, to);
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
   },
 
   async getPropertiesByLocation(filters: SearchFilters, page = 1, pageSize = 12): Promise<Property[]> {
     // Get all properties first
     let query = supabase.from('properties').select('*');
 
-    // Comprehensive text search filter
+    // Text search filter
     if (filters?.search_query) {
-      const searchTerm = filters.search_query.trim();
-      
-      // Search across multiple text fields
-      query = query.or(
-        `title.ilike.%${searchTerm}%,` +
-        `description.ilike.%${searchTerm}%,` +
-        `location.ilike.%${searchTerm}%,` +
-        `city.ilike.%${searchTerm}%,` +
-        `address.ilike.%${searchTerm}%,` +
-        `accommodation_type.ilike.%${searchTerm}%,` +
-        `gender_preference.ilike.%${searchTerm}%,` +
-        `occupancy_type.ilike.%${searchTerm}%`
-      );
+      const searchTerm = filters.search_query;
+      query = query.or(`title.ilike.%${searchTerm}%,location.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,address.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
     }
 
     // Apply non-location filters
