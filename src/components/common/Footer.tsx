@@ -17,7 +17,12 @@ const Footer: React.FC = () => {
                 loading="eager"
                 className="h-8 w-8 xl:h-9 xl:w-9 object-contain drop-shadow-sm"
               />
-               <h3 className="text-base xl:text-lg font-semibold">Roomsaathi</h3>
+                <img
+  src="/images/logo/roomsaathilogo.png"
+  alt="Roomsaathi Logo"
+  loading="eager"
+  className="h-30 xl:h-30 w-auto max-w-none"
+ />
             </div>
             <p className="text-sm xl:text-base text-primary-foreground/80 mb-3 xl:mb-4">
               Your trusted companion for finding the perfect student accommodation. 
