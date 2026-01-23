@@ -243,7 +243,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
               <Search className="absolute left-2 xl:left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 xl:h-5 xl:w-5 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search location, property..."
+                placeholder="Try: 'pg in mumbai', 'flat bangalore', 'hostel near delhi'..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="pl-8 xl:pl-10 h-10 xl:h-12 text-sm xl:text-base"
@@ -369,6 +369,21 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
           )}
         </form>
       </Card>
+
+      {/* Search Tips - Only show when no active filters */}
+      {!hasActiveFilters && (
+        <div className="flex items-start gap-2 text-xs xl:text-sm text-muted-foreground bg-muted/30 p-2 xl:p-3 rounded-lg">
+          <AlertCircle className="h-4 w-4 xl:h-5 xl:w-5 mt-0.5 shrink-0" />
+          <div>
+            <p className="font-medium mb-1">Smart Search Tips:</p>
+            <ul className="space-y-0.5 text-xs">
+              <li>• Use natural language: "pg in mumbai", "flat bangalore", "hostel near delhi"</li>
+              <li>• Search by type: pg, flat, hostel, room</li>
+              <li>• Search by city or use "Near Me" for location-based results</li>
+            </ul>
+          </div>
+        </div>
+      )}
 
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2">
