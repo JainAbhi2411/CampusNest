@@ -49,6 +49,14 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onClose }) => {
     parking_available: false,
     average_rating: 0,
     total_reviews: 0,
+    verification_status: 'verified' as 'verified' | 'pending' | 'rejected',
+    owner_contact: null as string | null,
+    owner_name: null as string | null,
+    owner_email: null as string | null,
+    submitted_at: new Date().toISOString(),
+    verified_at: null as string | null,
+    verified_by: null as string | null,
+    rejection_reason: null as string | null,
   });
 
   useEffect(() => {
@@ -78,6 +86,14 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ property, onClose }) => {
         parking_available: property.parking_available || false,
         average_rating: property.average_rating || 0,
         total_reviews: property.total_reviews || 0,
+        verification_status: property.verification_status || 'verified',
+        owner_contact: property.owner_contact || null,
+        owner_name: property.owner_name || null,
+        owner_email: property.owner_email || null,
+        submitted_at: property.submitted_at || new Date().toISOString(),
+        verified_at: property.verified_at || null,
+        verified_by: property.verified_by || null,
+        rejection_reason: property.rejection_reason || null,
       });
     }
   }, [property]);
