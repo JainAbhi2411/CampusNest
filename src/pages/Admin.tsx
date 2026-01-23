@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from 'miaoda-auth-react';
 import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Shield, Building2, Calendar, BarChart3, Utensils, LogOut } from 'lucide-react';
+import { Shield, Building2, Calendar, BarChart3, Utensils, LogOut, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { profileApi } from '@/db/api';
 import type { Profile } from '@/types/types';
@@ -13,6 +13,7 @@ import PropertyStats from '@/components/admin/PropertyStats';
 import PropertyManagement from '@/components/admin/PropertyManagement';
 import MessStats from '@/components/admin/MessStats';
 import MessManagement from '@/components/admin/MessManagement';
+import PropertyVerificationPanel from '@/components/admin/PropertyVerificationPanel';
 import { toast } from 'sonner';
 
 const Admin: React.FC = () => {
@@ -78,7 +79,7 @@ const Admin: React.FC = () => {
 
   return (
     <>
-      <PageMeta title="Admin Panel - CampusNest" description="Manage properties, bookings, and platform statistics" />
+      <PageMeta title="Admin Panel - Roomsaathi" description="Manage properties, bookings, and platform statistics" />
 
       <div className="min-h-screen bg-muted/30">
         <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground py-8 xl:py-12">
@@ -107,10 +108,14 @@ const Admin: React.FC = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-8">
+            <TabsList className="grid w-full grid-cols-6 mb-8">
               <TabsTrigger value="overview" className="gap-2">
                 <BarChart3 className="h-4 w-4" />
                 Overview
+              </TabsTrigger>
+              <TabsTrigger value="verification" className="gap-2">
+                <CheckCircle className="h-4 w-4" />
+                Verification
               </TabsTrigger>
               <TabsTrigger value="properties" className="gap-2">
                 <Building2 className="h-4 w-4" />
@@ -145,6 +150,10 @@ const Admin: React.FC = () => {
                 <h2 className="text-2xl font-bold">Booking Overview</h2>
                 <DashboardStats />
               </div>
+            </TabsContent>
+
+            <TabsContent value="verification" className="space-y-6">
+              <PropertyVerificationPanel />
             </TabsContent>
 
             <TabsContent value="properties" className="space-y-6">
