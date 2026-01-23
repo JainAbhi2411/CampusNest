@@ -436,20 +436,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
         </form>
       </Card>
 
-      {/* Search Tips - Only show when no active filters */}
-      {!hasActiveFilters && (
-        <div className="flex items-start gap-2 text-xs xl:text-sm text-muted-foreground bg-muted/30 p-2 xl:p-3 rounded-lg">
-          <AlertCircle className="h-4 w-4 xl:h-5 xl:w-5 mt-0.5 shrink-0" />
-          <div>
-            <p className="font-medium mb-1">Smart Search Tips:</p>
-            <ul className="space-y-0.5 text-xs">
-              <li>• Use natural language: "pg in mumbai", "flat bangalore", "hostel near delhi"</li>
-              <li>• Search by type: pg, flat, hostel, room</li>
-              <li>• Search by city or use "Near Me" for location-based results</li>
-            </ul>
-          </div>
-        </div>
-      )}
+      
 
       {hasActiveFilters && (
         <Card className="p-3 xl:p-4 bg-muted/30 border-muted">
