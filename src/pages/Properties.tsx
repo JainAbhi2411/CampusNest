@@ -6,7 +6,8 @@ import EnhancedSearchBar from '@/components/property/EnhancedSearchBar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Building2, ChevronLeft, ChevronRight, RefreshCw, Filter, X } from 'lucide-react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Building2, ChevronLeft, ChevronRight, RefreshCw, Filter, SlidersHorizontal } from 'lucide-react';
 import { propertyApi } from '@/db/api';
 import { supabase } from '@/db/supabase';
 import type { Property, SearchFilters } from '@/types/types';
@@ -20,7 +21,7 @@ const Properties: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<SearchFilters>({});
-  const [showFilters, setShowFilters] = useState(false);
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const { toast } = useToast();
   const pageSize = 12;
 
@@ -47,6 +48,8 @@ const Properties: React.FC = () => {
     }
 
     setFilters(urlFilters);
+    // Reset to page 1 when URL params change (filters change)
+    setCurrentPage(1);
   }, [searchParams]);
 
   useEffect(() => {
@@ -183,31 +186,10 @@ const Properties: React.FC = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 xl:py-8">
-          {/* Filter Toggle Button - Mobile & Tablet */}
-          <div className="mb-4 xl:hidden">
-            <Button
-              onClick={() => setShowFilters(!showFilters)}
-              variant={showFilters ? "default" : "outline"}
-              className="w-full h-10 text-sm"
-            >
-              {showFilters ? (
-                <>
-                  <X className="h-4 w-4 mr-2" />
-                  Hide Filters
-                </>
-              ) : (
-                <>
-                  <Filter className="h-4 w-4 mr-2" />
-                  Show Advanced Filters
-                </>
-              )}
-            </Button>
-          </div>
-
           <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 xl:gap-6">
-            {/* Advanced Filter Panel - Collapsible on Mobile */}
-            <div className={`xl:col-span-1 ${showFilters ? 'block' : 'hidden xl:block'}`}>
-              <div className="xl:sticky xl:top-20">
+            {/* Desktop Filter Panel - Sticky Sidebar */}
+            <div className="hidden xl:block xl:col-span-1">
+              <div className="sticky top-20">
                 <AdvancedFilterPanel
                   filters={filters}
                   onFilterChange={handleFilterChange}
@@ -217,6 +199,42 @@ const Properties: React.FC = () => {
             </div>
 
             <div className="xl:col-span-3">
+              {/* Mobile Filter Button - Floating */}
+              <div className="xl:hidden fixed bottom-6 right-6 z-40">
+                <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
+                  <SheetTrigger asChild>
+                    <Button
+                      size="lg"
+                      className="h-14 w-14 rounded-full shadow-lg"
+                    >
+                      <SlidersHorizontal className="h-6 w-6" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="w-[85vw] sm:w-[400px] overflow-y-auto p-0">
+                    <SheetHeader className="p-4 xl:p-6 border-b">
+                      <SheetTitle className="flex items-center gap-2">
+                        <Filter className="h-5 w-5" />
+                        Advanced Filters
+                      </SheetTitle>
+                    </SheetHeader>
+                    <div className="p-4">
+                      <AdvancedFilterPanel
+                        filters={filters}
+                        onFilterChange={(newFilters) => {
+                          handleFilterChange(newFilters);
+                          setIsFilterSheetOpen(false);
+                        }}
+                        onReset={() => {
+                          handleResetFilters();
+                          setIsFilterSheetOpen(false);
+                        }}
+                        showCard={false}
+                      />
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+
               {isLoading ? (
                 <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 xl:gap-6">
                   {[1, 2, 3, 4, 5, 6].map((i) => (
