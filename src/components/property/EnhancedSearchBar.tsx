@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation as useRouterLocation, useSearchParams } from 'react-router-dom';
+import { useNavigate, useLocation as useRouterLocation } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -63,7 +63,6 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
 }) => {
   const navigate = useNavigate();
   const routerLocation = useRouterLocation();
-  const [searchParams] = useSearchParams();
   const { location: contextLocation, setLocation: setContextLocation, clearLocation: clearContextLocation, hasLocation: hasContextLocation } = useLocation();
   
   const [query, setQuery] = useState('');
@@ -71,34 +70,6 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
   const [selectedType, setSelectedType] = useState<string>('');
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>('');
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
-
-  // Sync with URL parameters on mount and when they change
-  useEffect(() => {
-    const searchQuery = searchParams.get('search');
-    const city = searchParams.get('city');
-    const type = searchParams.get('type');
-    const minPrice = searchParams.get('min_price');
-    const maxPrice = searchParams.get('max_price');
-    const lat = searchParams.get('lat');
-    const lng = searchParams.get('lng');
-
-    if (searchQuery) setQuery(searchQuery);
-    if (city) setSelectedCity(city);
-    if (type) setSelectedType(type);
-    if (minPrice && maxPrice) {
-      setSelectedPriceRange(`${minPrice}-${maxPrice}`);
-    }
-    
-    // If lat/lng in URL, set location context
-    if (lat && lng) {
-      setContextLocation({
-        latitude: Number(lat),
-        longitude: Number(lng),
-        accuracy: undefined,
-        timestamp: Date.now(),
-      });
-    }
-  }, [searchParams, setContextLocation]);
 
   // Sync with context location
   useEffect(() => {
@@ -259,43 +230,6 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
     setSelectedType('all');
     setSelectedPriceRange('all');
     handleClearLocation();
-    
-    // Clear URL params as well
-    navigate(routerLocation.pathname, { replace: true });
-  };
-
-  const handleRemoveFilter = (filterType: 'query' | 'city' | 'type' | 'price' | 'location') => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    
-    switch (filterType) {
-      case 'query':
-        setQuery('');
-        newSearchParams.delete('search');
-        break;
-      case 'city':
-        setSelectedCity('all');
-        newSearchParams.delete('city');
-        break;
-      case 'type':
-        setSelectedType('all');
-        newSearchParams.delete('type');
-        break;
-      case 'price':
-        setSelectedPriceRange('all');
-        newSearchParams.delete('min_price');
-        newSearchParams.delete('max_price');
-        break;
-      case 'location':
-        handleClearLocation();
-        newSearchParams.delete('lat');
-        newSearchParams.delete('lng');
-        newSearchParams.delete('distance');
-        break;
-    }
-    
-    // Update URL
-    const queryString = newSearchParams.toString();
-    navigate(queryString ? `${routerLocation.pathname}?${queryString}` : routerLocation.pathname, { replace: true });
   };
 
   const hasActiveFilters = query || (selectedCity && selectedCity !== 'all') || (selectedType && selectedType !== 'all') || (selectedPriceRange && selectedPriceRange !== 'all') || hasContextLocation;
@@ -309,7 +243,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
               <Search className="absolute left-2 xl:left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 xl:h-5 xl:w-5 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Try: 'pg in mumbai', 'flat bangalore', 'hostel near delhi'..."
+                placeholder="Search location, property..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="pl-8 xl:pl-10 h-10 xl:h-12 text-sm xl:text-base"
@@ -436,103 +370,54 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
         </form>
       </Card>
 
-      
-
       {hasActiveFilters && (
-        <Card className="p-3 xl:p-4 bg-muted/30 border-muted">
-          <div className="flex items-center justify-between gap-3 mb-2">
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium text-foreground">Active Filters</span>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClearFilters}
-              className="h-7 text-xs hover:bg-background"
-            >
-              <X className="h-3 w-3 mr-1" />
-              Clear All
-            </Button>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {query && (
-              <Badge 
-                variant="secondary" 
-                className="text-xs xl:text-sm px-3 py-1.5 bg-background hover:bg-background/80 border border-border shadow-sm"
-              >
-                <Search className="h-3 w-3 mr-1.5" />
-                {query}
-                <button
-                  onClick={() => handleRemoveFilter('query')}
-                  className="ml-2 hover:bg-muted rounded-full p-0.5 transition-colors"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-            {selectedCity && selectedCity !== 'all' && (
-              <Badge 
-                variant="secondary" 
-                className="text-xs xl:text-sm px-3 py-1.5 bg-background hover:bg-background/80 border border-border shadow-sm"
-              >
-                <MapPin className="h-3 w-3 mr-1.5" />
-                {selectedCity}
-                <button
-                  onClick={() => handleRemoveFilter('city')}
-                  className="ml-2 hover:bg-muted rounded-full p-0.5 transition-colors"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-            {selectedType && selectedType !== 'all' && (
-              <Badge 
-                variant="secondary" 
-                className="text-xs xl:text-sm px-3 py-1.5 bg-background hover:bg-background/80 border border-border shadow-sm"
-              >
-                <Home className="h-3 w-3 mr-1.5" />
-                {selectedType.toUpperCase()}
-                <button
-                  onClick={() => handleRemoveFilter('type')}
-                  className="ml-2 hover:bg-muted rounded-full p-0.5 transition-colors"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-            {selectedPriceRange && selectedPriceRange !== 'all' && (
-              <Badge 
-                variant="secondary" 
-                className="text-xs xl:text-sm px-3 py-1.5 bg-background hover:bg-background/80 border border-border shadow-sm"
-              >
-                <IndianRupee className="h-3 w-3 mr-1.5" />
-                {PRICE_RANGES.find((r) => r.value === selectedPriceRange)?.label}
-                <button
-                  onClick={() => handleRemoveFilter('price')}
-                  className="ml-2 hover:bg-muted rounded-full p-0.5 transition-colors"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-            {hasContextLocation && (
-              <Badge 
-                variant="secondary" 
-                className="text-xs xl:text-sm px-3 py-1.5 bg-background hover:bg-background/80 border border-border shadow-sm"
-              >
-                <Navigation className="h-3 w-3 mr-1.5" />
-                Near Me
-                <button
-                  onClick={() => handleRemoveFilter('location')}
-                  className="ml-2 hover:bg-muted rounded-full p-0.5 transition-colors"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-          </div>
-        </Card>
+        <div className="flex flex-wrap gap-2">
+          {query && (
+            <Badge variant="secondary" className="text-xs xl:text-sm px-2 xl:px-3 py-1">
+              Search: {query}
+              <X
+                className="h-3 w-3 ml-1 cursor-pointer"
+                onClick={() => setQuery('')}
+              />
+            </Badge>
+          )}
+          {selectedCity && selectedCity !== 'all' && (
+            <Badge variant="secondary" className="text-xs xl:text-sm px-2 xl:px-3 py-1">
+              City: {selectedCity}
+              <X
+                className="h-3 w-3 ml-1 cursor-pointer"
+                onClick={() => setSelectedCity('all')}
+              />
+            </Badge>
+          )}
+          {selectedType && selectedType !== 'all' && (
+            <Badge variant="secondary" className="text-xs xl:text-sm px-2 xl:px-3 py-1">
+              Type: {selectedType.toUpperCase()}
+              <X
+                className="h-3 w-3 ml-1 cursor-pointer"
+                onClick={() => setSelectedType('all')}
+              />
+            </Badge>
+          )}
+          {selectedPriceRange && selectedPriceRange !== 'all' && (
+            <Badge variant="secondary" className="text-xs xl:text-sm px-2 xl:px-3 py-1">
+              Price: {PRICE_RANGES.find((r) => r.value === selectedPriceRange)?.label}
+              <X
+                className="h-3 w-3 ml-1 cursor-pointer"
+                onClick={() => setSelectedPriceRange('all')}
+              />
+            </Badge>
+          )}
+          {hasContextLocation && (
+            <Badge variant="secondary" className="text-xs xl:text-sm px-2 xl:px-3 py-1">
+              Near Me
+              <X
+                className="h-3 w-3 ml-1 cursor-pointer"
+                onClick={handleClearLocation}
+              />
+            </Badge>
+          )}
+        </div>
       )}
     </div>
   );
