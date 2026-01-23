@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, IndianRupee, Eye, GitCompare } from 'lucide-react';
 import { useComparison } from '@/contexts/ComparisonContext';
+import VerificationBadge from './VerificationBadge';
 import type { Property } from '@/types/types';
 
 interface PropertyCardProps {
@@ -65,7 +66,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
       </div>
 
       <CardContent className="p-2 xl:p-4">
-        <h3 className="text-sm xl:text-lg font-semibold mb-1 xl:mb-2 line-clamp-1">{property.title}</h3>
+        <div className="flex items-start justify-between gap-2 mb-1 xl:mb-2">
+          <h3 className="text-sm xl:text-lg font-semibold line-clamp-1 flex-1">{property.title}</h3>
+          {property.verification_status === 'verified' && (
+            <VerificationBadge size="sm" showText={false} className="flex-shrink-0" />
+          )}
+        </div>
         <div className="flex items-center text-muted-foreground text-xs xl:text-sm mb-2 xl:mb-3">
           <MapPin className="h-3 w-3 xl:h-4 xl:w-4 mr-1 flex-shrink-0" />
           <span className="line-clamp-1">{property.location}, {property.city}</span>
