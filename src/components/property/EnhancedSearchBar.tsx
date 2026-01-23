@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation as useRouterLocation } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -13,9 +13,12 @@ import {
   IndianRupee,
   Filter,
   X,
+  AlertCircle,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { AccommodationType } from '@/types/types';
+import { getCurrentLocation, getGeolocationErrorMessage, isGeolocationSupported, isSecureContext } from '@/lib/geolocation';
+import { useLocation } from '@/contexts/LocationContext';
 
 interface EnhancedSearchBarProps {
   onSearch?: (params: SearchParams) => void;
@@ -59,43 +62,126 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
   className = '',
 }) => {
   const navigate = useNavigate();
+  const routerLocation = useRouterLocation();
+  const { location: contextLocation, setLocation: setContextLocation, clearLocation: clearContextLocation, hasLocation: hasContextLocation } = useLocation();
+  
   const [query, setQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [selectedType, setSelectedType] = useState<string>('');
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>('');
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
-  const [hasLocation, setHasLocation] = useState(false);
-  const [locationCoords, setLocationCoords] = useState<{ lat: number; lng: number } | null>(null);
 
-  const handleGetCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      toast.error('Geolocation is not supported by your browser');
+  // Sync with context location
+  useEffect(() => {
+    if (contextLocation) {
+      setSelectedCity(''); // Clear city when location is active
+    }
+  }, [contextLocation]);
+
+  const handleGetCurrentLocation = async () => {
+    // Pre-flight checks
+    if (!isGeolocationSupported()) {
+      toast.error('Location services are not supported by your browser', {
+        description: 'Please use a modern browser like Chrome, Firefox, or Safari.',
+        duration: 5000,
+      });
+      return;
+    }
+
+    if (!isSecureContext()) {
+      toast.error('Secure connection required', {
+        description: 'Location services require HTTPS. Please ensure you\'re accessing the site securely.',
+        duration: 5000,
+      });
       return;
     }
 
     setIsLoadingLocation(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLocationCoords({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
+    
+    // Show loading toast
+    const loadingToast = toast.loading('Getting your location...', {
+      description: 'This may take a few seconds',
+    });
+
+    try {
+      const result = await getCurrentLocation({
+        timeout: 15000, // 15 seconds timeout
+        enableHighAccuracy: true,
+        retryAttempts: 3,
+        retryDelay: 1500,
+      });
+
+      toast.dismiss(loadingToast);
+
+      if (result.success && result.latitude && result.longitude) {
+        // Save to context
+        setContextLocation({
+          latitude: result.latitude,
+          longitude: result.longitude,
+          accuracy: result.accuracy,
+          timestamp: Date.now(),
         });
-        setHasLocation(true);
+        
         setSelectedCity('');
-        toast.success('Location detected successfully');
-        setIsLoadingLocation(false);
-      },
-      (error) => {
-        console.error('Geolocation error:', error);
-        toast.error('Failed to get your location. Please enable location services.');
-        setIsLoadingLocation(false);
+        
+        toast.success('Location detected successfully!', {
+          description: `Accuracy: ${result.accuracy ? Math.round(result.accuracy) + 'm' : 'Unknown'}`,
+          duration: 3000,
+        });
+
+        // Auto-navigate to properties page if on homepage
+        const isHomePage = routerLocation.pathname === '/';
+        if (isHomePage) {
+          const searchParams = new URLSearchParams();
+          searchParams.set('lat', result.latitude.toString());
+          searchParams.set('lng', result.longitude.toString());
+          searchParams.set('distance', '10');
+          
+          // Add other filters if present
+          if (query) searchParams.set('search', query);
+          if (selectedType && selectedType !== 'all') searchParams.set('type', selectedType);
+          if (selectedPriceRange && selectedPriceRange !== 'all') {
+            const [min, max] = selectedPriceRange.split('-');
+            searchParams.set('min_price', min);
+            searchParams.set('max_price', max);
+          }
+          
+          navigate(`/properties?${searchParams.toString()}`);
+        } else {
+          // On properties page, trigger search
+          handleSearch();
+        }
+      } else {
+        const errorMessage = getGeolocationErrorMessage(result.errorCode);
+        
+        toast.error('Unable to get your location', {
+          description: errorMessage,
+          duration: 6000,
+          action: result.errorCode === 'PERMISSION_DENIED' ? {
+            label: 'Help',
+            onClick: () => {
+              toast.info('How to enable location access', {
+                description: 'Click the location icon in your browser\'s address bar and select "Allow".',
+                duration: 8000,
+              });
+            },
+          } : undefined,
+        });
       }
-    );
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      console.error('Unexpected location error:', error);
+      toast.error('An unexpected error occurred', {
+        description: 'Please try again or search by city name.',
+        duration: 5000,
+      });
+    } finally {
+      setIsLoadingLocation(false);
+    }
   };
 
   const handleClearLocation = () => {
-    setHasLocation(false);
-    setLocationCoords(null);
+    clearContextLocation();
   };
 
   const handleSearch = (e?: React.FormEvent) => {
@@ -108,10 +194,10 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
       priceRange: selectedPriceRange && selectedPriceRange !== 'all' ? selectedPriceRange : undefined,
     };
 
-    if (hasLocation && locationCoords) {
+    if (hasContextLocation && contextLocation) {
       params.useLocation = true;
-      params.latitude = locationCoords.lat;
-      params.longitude = locationCoords.lng;
+      params.latitude = contextLocation.latitude;
+      params.longitude = contextLocation.longitude;
     }
 
     if (onSearch) {
@@ -146,7 +232,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
     handleClearLocation();
   };
 
-  const hasActiveFilters = query || (selectedCity && selectedCity !== 'all') || (selectedType && selectedType !== 'all') || (selectedPriceRange && selectedPriceRange !== 'all') || hasLocation;
+  const hasActiveFilters = query || (selectedCity && selectedCity !== 'all') || (selectedType && selectedType !== 'all') || (selectedPriceRange && selectedPriceRange !== 'all') || hasContextLocation;
 
   return (
     <div className={`space-y-3 xl:space-y-4 ${className}`}>
@@ -165,7 +251,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
             </div>
 
             <div className="flex gap-2">
-              {hasLocation ? (
+              {hasContextLocation ? (
                 <Button
                   type="button"
                   onClick={handleClearLocation}
@@ -207,7 +293,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
                 <Select
                   value={selectedCity}
                   onValueChange={setSelectedCity}
-                  disabled={hasLocation}
+                  disabled={hasContextLocation}
                 >
                   <SelectTrigger className="h-9 xl:h-10 text-xs xl:text-sm">
                     <SelectValue placeholder="Select City" />
@@ -322,7 +408,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
               />
             </Badge>
           )}
-          {hasLocation && (
+          {hasContextLocation && (
             <Badge variant="secondary" className="text-xs xl:text-sm px-2 xl:px-3 py-1">
               Near Me
               <X
