@@ -99,7 +99,7 @@ const PropertyDetails: React.FC = () => {
 
   const trackView = async (propertyId: string) => {
     try {
-      await propertyViewApi.recordView(propertyId, user?.id);
+      await propertyViewApi.recordView(propertyId, user?.id || null);
     } catch (error) {
       console.error('Failed to track view:', error);
     }
@@ -151,7 +151,7 @@ const PropertyDetails: React.FC = () => {
   return (
     <>
       <PageMeta
-        title={`${property.title} - CampusNest`}
+        title={`${property.title} - Roomsaathi`}
         description={property.description || `${accommodationTypeLabels[property.accommodation_type]} in ${property.city}`}
       />
 
