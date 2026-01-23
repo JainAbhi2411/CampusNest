@@ -196,6 +196,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({ filters, onFi
                 newFilters.latitude = undefined;
                 newFilters.longitude = undefined;
                 newFilters.max_distance = undefined;
+                clearContextLocation(); // Clear from context too
               }
               onFilterChange(newFilters);
             }}
