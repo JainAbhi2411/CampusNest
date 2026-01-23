@@ -71,16 +71,12 @@ const Header: React.FC = () => {
                 loading="eager"
                 className="h-8 w-8 xl:h-9 xl:w-9 object-contain drop-shadow-sm"
               />
-             <span className="text-xl xl:text-2xl font-bold tracking-wide">
-  <span className="text-[#0AA3B5]">Roo</span>
-
-  {/* Stylized M */}
-  <span className="mx-0.5 inline-block bg-gradient-to-b from-yellow-300 to-yellow-500 text-transparent bg-clip-text">
-    M
-  </span>
-
-  <span className="text-[#0AA3B5] uppercase">Saathi</span>
-</span>
+            <img
+                src="/images/logo/roomsaathilogo.png"
+                alt="Roomsaathi Logo"
+                loading="eager"
+                className="h-8 w-8 xl:h-9 xl:w-9 object-contain drop-shadow-sm"
+              />
             </Link>
           </div>
 
