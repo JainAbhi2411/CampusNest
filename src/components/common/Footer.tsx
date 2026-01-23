@@ -12,10 +12,11 @@ const Footer: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 mb-3 xl:mb-4">
               <img
-  src="/images/logo/roomsaathilogo.png"
-  alt="Roomsaathi Logo"
-  className="h-14 xl:h-16 w-auto scale-125 origin-left"
- />
+                src="/images/logo/mainlogo.png"
+                alt="Roomsaathi Logo"
+                loading="eager"
+                className="h-8 w-8 xl:h-9 xl:w-9 object-contain drop-shadow-sm"
+              />
                 <img
   src="/images/logo/roomsaathilogo.png"
   alt="Roomsaathi Logo"
