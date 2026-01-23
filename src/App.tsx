@@ -4,6 +4,7 @@ import { AuthProvider, RequireAuth } from 'miaoda-auth-react';
 import { Toaster } from 'sonner';
 import { supabase } from '@/db/supabase';
 import { ComparisonProvider } from '@/contexts/ComparisonContext';
+import { LocationProvider } from '@/contexts/LocationContext';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
@@ -46,11 +47,13 @@ const App: React.FC = () => {
     <Router>
       <AuthProvider client={supabase}>
         <Toaster position="top-center" richColors />
-        <ComparisonProvider>
-          <RequireAuth whiteList={["/", "/login", "/properties", "/property/:id", "/compare", "/mess", "/mess/:id", "/about", "/blog", "/blog/:slug", "/terms"]}>
-            <AppContent />
-          </RequireAuth>
-        </ComparisonProvider>
+        <LocationProvider>
+          <ComparisonProvider>
+            <RequireAuth whiteList={["/", "/login", "/properties", "/property/:id", "/compare", "/mess", "/mess/:id", "/about", "/blog", "/blog/:slug", "/terms", "/diagnostics/location"]}>
+              <AppContent />
+            </RequireAuth>
+          </ComparisonProvider>
+        </LocationProvider>
       </AuthProvider>
     </Router>
   );
