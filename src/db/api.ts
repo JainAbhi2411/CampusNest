@@ -80,8 +80,8 @@ export const propertyApi = {
       return this.getPropertiesByLocation(filters, page, pageSize);
     }
 
-    // Use comprehensive search function for better accuracy
-    const { data, error } = await supabase.rpc('search_properties_comprehensive', {
+    // Use advanced search function with natural language parsing
+    const { data, error } = await supabase.rpc('search_properties_advanced', {
       search_term: filters?.search_query?.trim() || null,
       filter_city: filters?.city || null,
       filter_accommodation_type: filters?.accommodation_type || null,
