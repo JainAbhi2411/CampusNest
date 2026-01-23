@@ -552,4 +552,3 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
 };
 
 export default EnhancedSearchBar;
-Receive
