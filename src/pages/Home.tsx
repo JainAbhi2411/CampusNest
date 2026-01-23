@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Building2, Search, Calendar, Shield, ArrowRight, Star, Quote, PlusCircle, TrendingUp, Users } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Building2, Search, Calendar, Shield, ArrowRight, Star, Quote, PlusCircle, TrendingUp, Users, CheckCircle2, ChevronDown } from 'lucide-react';
 import EnhancedSearchBar from '@/components/property/EnhancedSearchBar';
 import PropertyCard from '@/components/property/PropertyCard';
 import CategorySection from '@/components/property/CategorySection';
@@ -145,113 +145,230 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* List Your Property CTA Section with Animations */}
-        <section className="relative py-12 xl:py-20 bg-gradient-to-br from-secondary/10 via-background to-primary/5 overflow-hidden isolate">
+        {/* List Your Property CTA Section - Column Layout with Hover Features */}
+        <section className="relative py-16 xl:py-24 bg-gradient-to-br from-primary/5 via-background to-secondary/5 overflow-hidden">
           {/* Animated Background Elements */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-10 left-10 w-32 h-32 xl:w-64 xl:h-64 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow" />
-            <div className="absolute bottom-10 right-10 w-40 h-40 xl:w-72 xl:h-72 bg-primary/20 rounded-full blur-3xl animate-pulse-slow animation-delay-1000" />
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute -top-20 -left-20 w-64 h-64 xl:w-96 xl:h-96 bg-secondary/10 rounded-full blur-3xl animate-float-slow" />
+            <div className="absolute -bottom-20 -right-20 w-80 h-80 xl:w-[500px] xl:h-[500px] bg-primary/10 rounded-full blur-3xl animate-float-medium" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 xl:w-[600px] xl:h-[600px] bg-secondary/5 rounded-full blur-3xl animate-pulse-slow" />
           </div>
 
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 xl:gap-12 items-center">
-              {/* Left Content */}
-              <div className="space-y-6 animate-fade-in-left">
-                <div className="inline-block">
-                  <span className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/20 text-secondary rounded-full text-sm font-medium animate-bounce-subtle">
-                    <TrendingUp className="h-4 w-4" />
-                    For Property Owners
-                  </span>
-                </div>
-                
-                <h2 className="text-3xl xl:text-5xl font-bold leading-tight">
-                  List Your Property &{' '}
-                  <span className="text-secondary">Reach Thousands</span> of Students
-                </h2>
-                
-                <p className="text-base xl:text-lg text-muted-foreground">
-                  Join our platform and connect with students looking for quality accommodations. 
-                  Manage your properties efficiently with our comprehensive property management system.
-                </p>
+          <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Header */}
+            <div className="text-center mb-12 animate-fade-in">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-secondary/20 to-primary/20 backdrop-blur-sm rounded-full text-sm font-medium mb-4 animate-bounce-subtle border border-secondary/20">
+                <TrendingUp className="h-4 w-4 text-secondary" />
+                <span className="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent font-semibold">For Property Owners</span>
+              </div>
+              
+              <h2 className="text-2xl xl:text-4xl font-bold leading-tight mb-3">
+                List Your Property &{' '}
+                <span className="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">Reach Thousands</span>
+              </h2>
+              
+              <p className="text-sm xl:text-base text-muted-foreground max-w-2xl mx-auto mb-2">
+                Choose your preferred listing method and start connecting with students today
+              </p>
+              
+              <p className="text-xs text-muted-foreground/70 italic">
+                Hover over each option to see features
+              </p>
+            </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <a
-                    href="https://rosamanage.netlify.app/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group"
-                  >
-                    <Button 
-                      size="lg" 
-                      className="w-full sm:w-auto text-base xl:text-lg px-6 xl:px-8 py-6 bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse-glow"
-                    >
-                      <PlusCircle className="mr-2 h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
-                      List Your Property Now
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                    </Button>
-                  </a>
-                </div>
+            {/* Column Layout - Cards Stacked Vertically */}
+            <div className="space-y-6 max-w-2xl mx-auto mb-12">
+              {/* Option 1: Quick Listing - Expandable on Hover */}
+              <div className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-secondary to-secondary/50 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-700 animate-pulse-subtle" />
+                
+                <Card className="relative overflow-hidden border-2 border-transparent hover:border-secondary/30 transition-all duration-500 backdrop-blur-sm bg-background/95 group-hover:shadow-2xl animate-fade-in-up">
+                  {/* Animated gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-secondary/0 via-secondary/5 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  {/* Floating particles effect */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 group-hover:animate-ping-slow" />
+                  
+                  <CardContent className="relative z-10 p-6">
+                    {/* Always Visible: Icon and Title */}
+                    <div className="flex items-center justify-between gap-4 mb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-secondary/30 rounded-xl blur-md group-hover:blur-lg transition-all duration-300" />
+                          <div className="relative w-14 h-14 bg-gradient-to-br from-secondary to-secondary/80 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                            <PlusCircle className="h-7 w-7 text-white" />
+                          </div>
+                        </div>
+                        
+                        <div className="flex-1">
+                          <h3 className="text-xl font-bold mb-1 group-hover:text-secondary transition-colors duration-300">Quick Listing</h3>
+                          <p className="text-sm text-muted-foreground">Simple & Fast - Perfect for individual owners</p>
+                        </div>
+                      </div>
 
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 pt-6">
-                  <div className="text-center p-4 bg-background/50 backdrop-blur-sm rounded-lg border border-border/50 hover:border-secondary/50 transition-all duration-300 hover:scale-105">
-                    <div className="text-2xl xl:text-3xl font-bold text-secondary">10K+</div>
-                    <div className="text-xs xl:text-sm text-muted-foreground">Active Students</div>
-                  </div>
-                  <div className="text-center p-4 bg-background/50 backdrop-blur-sm rounded-lg border border-border/50 hover:border-secondary/50 transition-all duration-300 hover:scale-105">
-                    <div className="text-2xl xl:text-3xl font-bold text-secondary">95%</div>
-                    <div className="text-xs xl:text-sm text-muted-foreground">Occupancy Rate</div>
-                  </div>
-                  <div className="text-center p-4 bg-background/50 backdrop-blur-sm rounded-lg border border-border/50 hover:border-secondary/50 transition-all duration-300 hover:scale-105">
-                    <div className="text-2xl xl:text-3xl font-bold text-secondary">24/7</div>
-                    <div className="text-xs xl:text-sm text-muted-foreground">Support</div>
-                  </div>
-                </div>
+                      {/* Hover indicator */}
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground group-hover:text-secondary transition-colors duration-300">
+                        <span className="hidden xl:inline">Hover to see features</span>
+                        <ChevronDown className="h-4 w-4 group-hover:translate-y-1 transition-transform duration-300" />
+                      </div>
+                    </div>
+
+                    {/* Hidden by default, revealed on hover with animation */}
+                    <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out">
+                      <div className="overflow-hidden">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 transform translate-y-4 group-hover:translate-y-0">
+                          {/* Feature list */}
+                          <div className="pt-4 pb-4 border-t border-border/50 mt-2">
+                            <h4 className="text-sm font-semibold mb-3 text-muted-foreground">Key Features:</h4>
+                            <ul className="space-y-2.5 mb-5">
+                              <li className="flex items-start gap-3 text-sm group/item hover:translate-x-2 transition-transform duration-200">
+                                <CheckCircle2 className="h-5 w-5 text-secondary flex-shrink-0 mt-0.5 group-hover/item:scale-125 transition-transform duration-200" />
+                                <span>Fill out a simple property listing form</span>
+                              </li>
+                              <li className="flex items-start gap-3 text-sm group/item hover:translate-x-2 transition-transform duration-200">
+                                <CheckCircle2 className="h-5 w-5 text-secondary flex-shrink-0 mt-0.5 group-hover/item:scale-125 transition-transform duration-200" />
+                                <span>Our team reviews within 24-48 hours</span>
+                              </li>
+                              <li className="flex items-start gap-3 text-sm group/item hover:translate-x-2 transition-transform duration-200">
+                                <CheckCircle2 className="h-5 w-5 text-secondary flex-shrink-0 mt-0.5 group-hover/item:scale-125 transition-transform duration-200" />
+                                <span>Property goes live instantly after approval</span>
+                              </li>
+                              <li className="flex items-start gap-3 text-sm group/item hover:translate-x-2 transition-transform duration-200">
+                                <CheckCircle2 className="h-5 w-5 text-secondary flex-shrink-0 mt-0.5 group-hover/item:scale-125 transition-transform duration-200" />
+                                <span>Students can view and contact you directly</span>
+                              </li>
+                            </ul>
+
+                            {/* Button */}
+                            <Link to="/for-owners">
+                              <Button 
+                                className="w-full bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary text-white shadow-lg hover:shadow-xl hover:shadow-secondary/50 transition-all duration-300 relative overflow-hidden"
+                              >
+                                <span className="absolute inset-0 bg-white/20 translate-y-full hover:translate-y-0 transition-transform duration-300" />
+                                <span className="relative flex items-center justify-center gap-2">
+                                  <PlusCircle className="h-4 w-4" />
+                                  Start Listing Now
+                                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                                </span>
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
-              {/* Right Content - Feature Cards */}
-              <div className="space-y-4 animate-fade-in-right">
-                <Card className="p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 border-l-4 border-l-secondary">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-secondary/10 rounded-lg">
-                      <Building2 className="h-6 w-6 text-secondary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg mb-2">Easy Property Management</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Manage all your properties from a single dashboard with real-time updates and analytics.
-                      </p>
-                    </div>
-                  </div>
-                </Card>
+              {/* Option 2: Full Management - Expandable on Hover */}
+              <div className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-primary/50 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-700 animate-pulse-subtle" />
+                
+                <Card className="relative overflow-hidden border-2 border-transparent hover:border-primary/30 transition-all duration-500 backdrop-blur-sm bg-background/95 group-hover:shadow-2xl animate-fade-in-up animation-delay-200">
+                  {/* Animated gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/5 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  {/* Floating particles effect */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 group-hover:animate-ping-slow" />
+                  
+                  <CardContent className="relative z-10 p-6">
+                    {/* Always Visible: Icon and Title */}
+                    <div className="flex items-center justify-between gap-4 mb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-primary/30 rounded-xl blur-md group-hover:blur-lg transition-all duration-300" />
+                          <div className="relative w-14 h-14 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                            <Building2 className="h-7 w-7 text-white" />
+                          </div>
+                        </div>
+                        
+                        <div className="flex-1">
+                          <h3 className="text-xl font-bold mb-1 group-hover:text-primary transition-colors duration-300">Full Management System</h3>
+                          <p className="text-sm text-muted-foreground">Professional & Advanced - Ideal for property managers</p>
+                        </div>
+                      </div>
 
-                <Card className="p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 border-l-4 border-l-primary">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-primary/10 rounded-lg">
-                      <Users className="h-6 w-6 text-primary" />
+                      {/* Hover indicator */}
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground group-hover:text-primary transition-colors duration-300">
+                        <span className="hidden xl:inline">Hover to see features</span>
+                        <ChevronDown className="h-4 w-4 group-hover:translate-y-1 transition-transform duration-300" />
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-lg mb-2">Verified Tenants</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Connect with verified students and professionals looking for quality accommodations.
-                      </p>
-                    </div>
-                  </div>
-                </Card>
 
-                <Card className="p-6 hover:shadow-xl transition-all duration-300 hover:scale-105 border-l-4 border-l-secondary">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-secondary/10 rounded-lg">
-                      <TrendingUp className="h-6 w-6 text-secondary" />
+                    {/* Hidden by default, revealed on hover with animation */}
+                    <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out">
+                      <div className="overflow-hidden">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 transform translate-y-4 group-hover:translate-y-0">
+                          {/* Feature list */}
+                          <div className="pt-4 pb-4 border-t border-border/50 mt-2">
+                            <h4 className="text-sm font-semibold mb-3 text-muted-foreground">Key Features:</h4>
+                            <ul className="space-y-2.5 mb-5">
+                              <li className="flex items-start gap-3 text-sm group/item hover:translate-x-2 transition-transform duration-200">
+                                <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5 group-hover/item:scale-125 transition-transform duration-200" />
+                                <span>Manage multiple properties from one dashboard</span>
+                              </li>
+                              <li className="flex items-start gap-3 text-sm group/item hover:translate-x-2 transition-transform duration-200">
+                                <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5 group-hover/item:scale-125 transition-transform duration-200" />
+                                <span>Track bookings, payments, and tenant information</span>
+                              </li>
+                              <li className="flex items-start gap-3 text-sm group/item hover:translate-x-2 transition-transform duration-200">
+                                <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5 group-hover/item:scale-125 transition-transform duration-200" />
+                                <span>Real-time analytics and performance insights</span>
+                              </li>
+                              <li className="flex items-start gap-3 text-sm group/item hover:translate-x-2 transition-transform duration-200">
+                                <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5 group-hover/item:scale-125 transition-transform duration-200" />
+                                <span>Automated notifications and communication tools</span>
+                              </li>
+                            </ul>
+
+                            {/* Button */}
+                            <a
+                              href="https://rosamanage.netlify.app/"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Button 
+                                className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white shadow-lg hover:shadow-xl hover:shadow-primary/50 transition-all duration-300 relative overflow-hidden"
+                              >
+                                <span className="absolute inset-0 bg-white/20 translate-y-full hover:translate-y-0 transition-transform duration-300" />
+                                <span className="relative flex items-center justify-center gap-2">
+                                  <Building2 className="h-4 w-4" />
+                                  Access Management Portal
+                                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                                </span>
+                              </Button>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-lg mb-2">Maximize Revenue</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Increase your property visibility and occupancy rates with our targeted marketing.
-                      </p>
-                    </div>
-                  </div>
+                  </CardContent>
                 </Card>
+              </div>
+            </div>
+
+            {/* Stats with impressive hover effects */}
+            <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto animate-fade-in-up">
+              <div className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-secondary to-primary rounded-xl opacity-0 group-hover:opacity-100 blur transition-all duration-300" />
+                <div className="relative text-center p-4 bg-background/80 backdrop-blur-sm rounded-xl border border-border/50 group-hover:border-transparent transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+                  <div className="text-2xl xl:text-3xl font-bold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">10K+</div>
+                  <div className="text-xs text-muted-foreground">Active Students</div>
+                </div>
+              </div>
+              <div className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-secondary rounded-xl opacity-0 group-hover:opacity-100 blur transition-all duration-300" />
+                <div className="relative text-center p-4 bg-background/80 backdrop-blur-sm rounded-xl border border-border/50 group-hover:border-transparent transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+                  <div className="text-2xl xl:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">95%</div>
+                  <div className="text-xs text-muted-foreground">Occupancy Rate</div>
+                </div>
+              </div>
+              <div className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-secondary to-primary rounded-xl opacity-0 group-hover:opacity-100 blur transition-all duration-300" />
+                <div className="relative text-center p-4 bg-background/80 backdrop-blur-sm rounded-xl border border-border/50 group-hover:border-transparent transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+                  <div className="text-2xl xl:text-3xl font-bold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">24/7</div>
+                  <div className="text-xs text-muted-foreground">Support</div>
+                </div>
               </div>
             </div>
           </div>
