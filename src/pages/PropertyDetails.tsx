@@ -27,6 +27,7 @@ import FavoriteButton from '@/components/property/FavoriteButton';
 import ShareButton from '@/components/property/ShareButton';
 import ReviewSection from '@/components/property/ReviewSection';
 import RentCalculator from '@/components/property/RentCalculator';
+import VerificationBadge from '@/components/property/VerificationBadge';
 import Video from '@/components/ui/video';
 import { propertyApi, propertyViewApi, profileApi, messFacilityApi } from '@/db/api';
 import { useAuth } from 'miaoda-auth-react';
@@ -170,7 +171,12 @@ const PropertyDetails: React.FC = () => {
                 <CardContent className="p-6">
                   <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                     <div className="flex-1">
-                      <h1 className="text-3xl font-bold mb-2">{property.title}</h1>
+                      <div className="flex items-start gap-3 mb-2">
+                        <h1 className="text-3xl font-bold flex-1">{property.title}</h1>
+                        {property.verification_status === 'verified' && (
+                          <VerificationBadge size="md" />
+                        )}
+                      </div>
                       <div className="flex items-center text-muted-foreground mb-2">
                         <MapPin className="h-4 w-4 mr-1" />
                         <span>{property.address}, {property.location}, {property.city}</span>
