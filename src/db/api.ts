@@ -2,6 +2,7 @@ import { supabase } from './supabase';
 import type {
   Profile,
   Property,
+  PropertySubmission,
   MessFacility,
   MessBooking,
   MessReview,
@@ -82,6 +83,9 @@ export const propertyApi = {
 
     let query = supabase.from('properties').select('*');
 
+    // Only show verified properties to public
+    query = query.eq('verification_status', 'verified');
+
     // Text search filter
     if (filters?.search_query) {
       const searchTerm = filters.search_query;
@@ -159,8 +163,11 @@ export const propertyApi = {
   },
 
   async getPropertiesByLocation(filters: SearchFilters, page = 1, pageSize = 12): Promise<Property[]> {
-    // Get all properties first
+    // Get all verified properties first
     let query = supabase.from('properties').select('*');
+
+    // Only show verified properties
+    query = query.eq('verification_status', 'verified');
 
     // Text search filter
     if (filters?.search_query) {
@@ -279,6 +286,7 @@ export const propertyApi = {
       .from('properties')
       .select('*')
       .eq('accommodation_type', type)
+      .eq('verification_status', 'verified')
       .eq('available', true)
       .order('average_rating', { ascending: false })
       .limit(limit);
@@ -338,6 +346,90 @@ export const propertyApi = {
 
     if (error) throw error;
     return Array.isArray(data) ? data : [];
+  },
+
+  async submitProperty(submission: any): Promise<Property> {
+    const propertyData = {
+      title: submission.title,
+      description: submission.description || null,
+      accommodation_type: submission.accommodation_type,
+      price: submission.price,
+      price_period: submission.price_period || 'month',
+      location: submission.location,
+      address: submission.address,
+      city: submission.city,
+      owner_contact: submission.owner_contact,
+      owner_name: submission.owner_name,
+      owner_email: submission.owner_email || null,
+      gender_preference: submission.gender_preference || 'any',
+      occupancy_type: submission.occupancy_type || 'single',
+      food_included: submission.food_included || false,
+      wifi_available: submission.wifi_available || false,
+      ac_available: submission.ac_available || false,
+      parking_available: submission.parking_available || false,
+      amenities: submission.amenities || [],
+      images: [],
+      available: true,
+      verification_status: 'pending',
+      average_rating: 0,
+      total_reviews: 0,
+    };
+
+    const { data, error } = await supabase
+      .from('properties')
+      .insert(propertyData)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Failed to submit property');
+    return data;
+  },
+
+  async getPendingProperties(): Promise<Property[]> {
+    const { data, error } = await supabase
+      .from('properties')
+      .select('*')
+      .eq('verification_status', 'pending')
+      .order('submitted_at', { ascending: false });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  },
+
+  async verifyProperty(propertyId: string, userId: string): Promise<Property> {
+    const { data, error } = await supabase
+      .from('properties')
+      .update({
+        verification_status: 'verified',
+        verified_at: new Date().toISOString(),
+        verified_by: userId,
+      })
+      .eq('id', propertyId)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Property not found');
+    return data;
+  },
+
+  async rejectProperty(propertyId: string, userId: string, reason: string): Promise<Property> {
+    const { data, error } = await supabase
+      .from('properties')
+      .update({
+        verification_status: 'rejected',
+        verified_at: new Date().toISOString(),
+        verified_by: userId,
+        rejection_reason: reason,
+      })
+      .eq('id', propertyId)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Property not found');
+    return data;
   },
 };
 
@@ -1494,5 +1586,4 @@ export const feedbackApi = {
     return data || [];
   },
 };
-
 
