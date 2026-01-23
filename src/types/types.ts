@@ -5,6 +5,7 @@ export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
 export type GenderPreference = 'male' | 'female' | 'any';
 export type OccupancyType = 'single' | 'double' | 'triple' | 'multiple';
 export type SortOption = 'price_low' | 'price_high' | 'rating' | 'newest';
+export type VerificationStatus = 'pending' | 'verified' | 'rejected';
 
 export interface Profile {
   id: string;
@@ -43,8 +44,37 @@ export interface Property {
   parking_available: boolean;
   average_rating: number;
   total_reviews: number;
+  verification_status: VerificationStatus;
+  owner_contact: string | null;
+  owner_name: string | null;
+  owner_email: string | null;
+  submitted_at: string;
+  verified_at: string | null;
+  verified_by: string | null;
+  rejection_reason: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface PropertySubmission {
+  title: string;
+  description: string;
+  accommodation_type: AccommodationType;
+  price: number;
+  price_period: string;
+  location: string;
+  address: string;
+  city: string;
+  owner_contact: string;
+  owner_name: string;
+  owner_email?: string;
+  gender_preference?: GenderPreference;
+  occupancy_type?: OccupancyType;
+  food_included?: boolean;
+  wifi_available?: boolean;
+  ac_available?: boolean;
+  parking_available?: boolean;
+  amenities?: string[];
 }
 
 export interface MessFacility {
