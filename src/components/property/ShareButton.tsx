@@ -97,7 +97,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
             </Button>
           </div>
 
-          {navigator.share && (
+          {typeof navigator.share === 'function' && (
             <Button onClick={handleNativeShare} className="w-full gap-2">
               <Share2 className="h-4 w-4" />
               Share via...
