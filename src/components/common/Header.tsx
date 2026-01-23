@@ -75,7 +75,7 @@ const Header: React.FC = () => {
   src="/images/logo/roomsaathilogo.png"
   alt="Roomsaathi Logo"
   loading="eager"
-                className="h-8 w-8 xl:h-9 xl:w-9 object-contain drop-shadow-sm"
+                className="h-16 w-16 xl:h-9 xl:w-9 object-contain drop-shadow-sm"
  />
             </Link>
           </div>
