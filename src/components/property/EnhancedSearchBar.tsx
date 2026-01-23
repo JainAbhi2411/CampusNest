@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation as useRouterLocation } from 'react-router-dom';
+import { useNavigate, useLocation as useRouterLocation, useSearchParams } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -63,6 +63,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
 }) => {
   const navigate = useNavigate();
   const routerLocation = useRouterLocation();
+  const [searchParams] = useSearchParams();
   const { location: contextLocation, setLocation: setContextLocation, clearLocation: clearContextLocation, hasLocation: hasContextLocation } = useLocation();
   
   const [query, setQuery] = useState('');
@@ -70,6 +71,43 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
   const [selectedType, setSelectedType] = useState<string>('');
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>('');
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+
+  // Sync with URL params (for properties page)
+  useEffect(() => {
+    const searchQuery = searchParams.get('search');
+    const city = searchParams.get('city');
+    const type = searchParams.get('type');
+    const minPrice = searchParams.get('min_price');
+    const maxPrice = searchParams.get('max_price');
+    const lat = searchParams.get('lat');
+    const lng = searchParams.get('lng');
+
+    // Only update if we're on properties page with params
+    const isPropertiesPage = routerLocation.pathname === '/properties';
+    if (!isPropertiesPage) return;
+
+    // Update local state from URL (only if param exists)
+    setQuery(searchQuery || '');
+    setSelectedCity(city || 'all');
+    setSelectedType(type || 'all');
+    
+    // Reconstruct price range from min/max
+    if (minPrice && maxPrice) {
+      const priceRangeValue = `${minPrice}-${maxPrice}`;
+      setSelectedPriceRange(priceRangeValue);
+    } else {
+      setSelectedPriceRange('all');
+    }
+
+    // Sync location from URL to context
+    if (lat && lng && !hasContextLocation) {
+      setContextLocation({
+        latitude: Number(lat),
+        longitude: Number(lng),
+        timestamp: Date.now(),
+      });
+    }
+  }, [searchParams, routerLocation.pathname]);
 
   // Sync with context location
   useEffect(() => {
@@ -230,6 +268,11 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
     setSelectedType('all');
     setSelectedPriceRange('all');
     handleClearLocation();
+    
+    // If on properties page, clear URL params
+    if (routerLocation.pathname === '/properties') {
+      navigate('/properties');
+    }
   };
 
   const hasActiveFilters = query || (selectedCity && selectedCity !== 'all') || (selectedType && selectedType !== 'all') || (selectedPriceRange && selectedPriceRange !== 'all') || hasContextLocation;
@@ -292,7 +335,13 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
                 </label>
                 <Select
                   value={selectedCity}
-                  onValueChange={setSelectedCity}
+                  onValueChange={(value) => {
+                    setSelectedCity(value);
+                    // Clear location when selecting a city
+                    if (value && value !== 'all') {
+                      clearContextLocation();
+                    }
+                  }}
                   disabled={hasContextLocation}
                 >
                   <SelectTrigger className="h-9 xl:h-10 text-xs xl:text-sm">
