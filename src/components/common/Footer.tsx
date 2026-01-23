@@ -20,8 +20,7 @@ const Footer: React.FC = () => {
                 <img
   src="/images/logo/roomsaathilogo.png"
   alt="Roomsaathi Logo"
-  loading="eager"
-  className="h-30 xl:h-30 w-auto max-w-none"
+  className="h-14 xl:h-16 w-auto scale-125 origin-left"
  />
             </div>
             <p className="text-sm xl:text-base text-primary-foreground/80 mb-3 xl:mb-4">
