@@ -11,6 +11,8 @@ import AboutUs from './pages/AboutUs';
 import Blogs from './pages/Blogs';
 import BlogPost from './pages/BlogPost';
 import TermsAndConditions from './pages/TermsAndConditions';
+import ForOwners from './pages/ForOwners';
+import LocationDiagnostics from './components/diagnostics/LocationDiagnostics';
 import type { ReactNode } from 'react';
 
 interface RouteConfig {
@@ -79,6 +81,18 @@ const routes: RouteConfig[] = [
     name: 'Terms and Conditions',
     path: '/terms',
     element: <TermsAndConditions />,
+    visible: false,
+  },
+  {
+    name: 'For Owners',
+    path: '/for-owners',
+    element: <ForOwners />,
+    visible: false,
+  },
+  {
+    name: 'Location Diagnostics',
+    path: '/diagnostics/location',
+    element: <LocationDiagnostics />,
     visible: false,
   },
   {
