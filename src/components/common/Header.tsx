@@ -71,11 +71,10 @@ const Header: React.FC = () => {
                 loading="eager"
                 className="h-8 w-8 xl:h-9 xl:w-9 object-contain drop-shadow-sm"
               />
-          <img
+         <img
   src="/images/logo/roomsaathilogo.png"
   alt="Roomsaathi Logo"
-  loading="eager"
-  className="h-30 xl:h-30 w-auto max-w-none"
+  className="h-14 xl:h-16 w-auto scale-125 origin-left"
  />
             </Link>
           </div>
